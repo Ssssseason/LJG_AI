@@ -1,3 +1,9 @@
+/*
+ * @Author: Yixin Ji
+ * @Date: 2018-06-01 11:13:21
+ * @Last Modified by:   Yixin Ji
+ * @Last Modified time: 2018-06-01 11:13:21
+ */
 #include <cstdint>
 #include <cassert>
 #include <cstdio>
@@ -10,6 +16,11 @@ enum Role
 
 class Bitboard
 {
+private:
+	static unsigned char cntOfByte[256];
+	static unsigned char roxanneWeights[64];
+	static unsigned char indices[64];
+
 public:
 	// board:
 	// 0, 1, 2, 3, 4, 5, 6, 7
@@ -19,15 +30,7 @@ public:
 	Bitboard(uint64_t black, uint64_t white) : black(black), white(white) {}
 
 private:
-	static int cntOfByte[256];
-	static void initCntOfByte() {
-		if (cntOfByte[255])
-			return;
-		cntOfByte[0] = 0;
-		for (int i = 1; i < 256; i++) {
-			cntOfByte[i] = cntOfByte[i / 2] + (i & 1);
-		}
-	}
+
 
 	static uint64_t shiftLeft(uint64_t pawn)
 	{
@@ -69,6 +72,11 @@ private:
 		return shiftDown(shiftRight(pawn));
 	}
 
+	static int getPopCnt(uint64_t pawn)
+	{
+		return cntOfByte[pawn & 0xff] + cntOfByte[(pawn >> 8) & 0xff] + cntOfByte[(pawn >> 16) & 0xff] + cntOfByte[(pawn >> 24) & 0xff] + cntOfByte[(pawn >> 32) & 0xff] + cntOfByte[(pawn >> 40) & 0xff] + cntOfByte[(pawn >> 48) & 0xff] + cntOfByte[(pawn >> 56) & 0xff];
+	}
+
 	uint64_t getEmpty()
 	{
 		return ~(black | white);
@@ -81,36 +89,8 @@ private:
 		tmp = shift##DIR(tmp) & opp; \
 		subOpp |= tmp;               \
 	}                                \
-	actions |= shift##DIR(subOpp) & empty;\
+	actions |= shift##DIR(subOpp) & empty;
 
-public:
-	uint64_t getActions(Role player)
-	{
-		uint64_t actions = 0;
-		uint64_t cur, opp, subOpp, tmp;
-		if (player == BLACK)
-		{
-			cur = black;
-			opp = white;
-		}
-		else
-		{
-			cur = white;
-			opp = black;
-		}
-		uint64_t empty = getEmpty();
-
-		getActionsIn(Left);
-		getActionsIn(Right);
-		getActionsIn(Up);
-		getActionsIn(Down);
-		getActionsIn(UpLeft);
-		getActionsIn(UpRight);
-		getActionsIn(DownLeft);
-		getActionsIn(DownRight);
-
-		return actions;
-	}
 
 #define reverseBoardIn(DIR)          \
 	subOpp = 0;                      \
@@ -120,13 +100,12 @@ public:
 		tmp = shift##DIR(tmp) & opp; \
 		subOpp |= tmp;               \
 	}                                \
-	if (shift##DIR(subOpp) & cur)                   \
+	if (shift##DIR(subOpp) & cur)    \
 	{                                \
 		cur ^= subOpp;               \
 		opp ^= subOpp;               \
 	}
 
-private:
 	void reverseBoard(Role player, uint64_t action)
 	{
 		uint64_t cur, opp, subOpp, tmp;
@@ -162,6 +141,34 @@ private:
 	}
 
 public:
+	uint64_t getActions(Role player)
+	{
+		uint64_t actions = 0;
+		uint64_t cur, opp, subOpp, tmp;
+		if (player == BLACK)
+		{
+			cur = black;
+			opp = white;
+		}
+		else
+		{
+			cur = white;
+			opp = black;
+		}
+		uint64_t empty = getEmpty();
+
+		getActionsIn(Left);
+		getActionsIn(Right);
+		getActionsIn(Up);
+		getActionsIn(Down);
+		getActionsIn(UpLeft);
+		getActionsIn(UpRight);
+		getActionsIn(DownLeft);
+		getActionsIn(DownRight);
+
+		return actions;
+	}
+
 	void takeAction(Role player, uint64_t action)
 	{
 		reverseBoard(player, action);
@@ -177,17 +184,53 @@ public:
 		return !(getActions(BLACK) | getActions(WHITE));
 	}
 
-	int getBlackNum() {
-		initCntOfByte();
-		return cntOfByte[black & 0xff] + cntOfByte[(black >> 8) & 0xff] + cntOfByte[(black >> 16) & 0xff] + cntOfByte[(black >> 24) & 0xff] + cntOfByte[(black >> 32) & 0xff]
-			+ cntOfByte[(black >> 40) & 0xff] + cntOfByte[(black >> 48) & 0xff] + cntOfByte[(black >> 56) & 0xff];
+	int getScore(Role player)
+	{
+		return getPopCnt(player == BLACK ? black : white);
 	}
 
-	int getWhiteNum() {
-		initCntOfByte();
-		return cntOfByte[white & 0xff] + cntOfByte[(white >> 8) & 0xff] + cntOfByte[(white >> 16) & 0xff] + cntOfByte[(white >> 24) & 0xff] + cntOfByte[(white >> 32) & 0xff]
-			+ cntOfByte[(white >> 40) & 0xff] + cntOfByte[(white >> 48) & 0xff] + cntOfByte[(white >> 56) & 0xff];
+	int getMobility()
+	{
+		return getPopCnt(getActions(BLACK)) - getPopCnt(getActions(WHITE));
+	}
 
+	int getProtMobility()
+	{
+		uint64_t empty = getEmpty();
+		uint64_t exEmpty = shiftLeft(empty) | shiftRight(empty) | shiftUp(empty) | shiftDown(empty) | shiftUpLeft(empty) | shiftUpRight(empty) |
+			shiftDownLeft(empty) | shiftDownRight(empty);
+		return getPopCnt(exEmpty & white) - getPopCnt(exEmpty & black);
+	}
+
+	int getCorner()
+	{
+		return getPopCnt(0x8100000000000081 & black) - getPopCnt(0x8100000000000081 & white);
+	}
+
+	static int scanForward(uint64_t bits) {
+		assert(bits);
+		return indices[((bits & -bits) * 0x03f79d71b4cb0a89) >> 58];
+	}
+
+	/**
+	 * @brief Get the Roxanne Priority: when two actions have athe same estimated value, choose ont with the higher RoxannePriority.
+	 *
+	 * @param action
+	 * @return int
+	 */
+	static int getRoxannePriority(uint64_t action) {
+		return roxanneWeights[scanForward(action)];
+	}
+
+
+	double evaluate() {
+		int m = getMobility();
+		int p = getProtMobility();
+		int c = getCorner();
+		printf("Mobility: %d\n", m);
+		printf("ProbMobility: %d\n", p);
+		printf("Corner: %d\n", c);
+		return 0;
 	}
 
 	void printBoard()
@@ -214,7 +257,8 @@ public:
 		}
 	}
 
-	static	void printPawn(uint64_t p) {
+	static void printPawn(uint64_t p)
+	{
 		printf("   ");
 		for (int i = 0; i < 8; i++)
 		{
@@ -232,8 +276,38 @@ public:
 			p >>= 1;
 			printf(i % 8 == 7 ? "|\n" : "");
 		}
-
 	}
 
+	static void init()
+	{
+		if (cntOfByte[255])
+			return;
+		cntOfByte[0] = 0;
+		for (int i = 1; i < 256; i++)
+		{
+			cntOfByte[i] = cntOfByte[i / 2] + (i & 1);
+		}
+		unsigned char weights[64] = {
+			1,5,3,3,3,3,5,1,
+			5,5,4,4,4,4,5,5,
+			3,4,2,2,2,2,4,3,
+			3,4,2,0,0,2,4,3,
+			3,4,2,0,0,2,4,3,
+			3,4,2,2,2,2,4,3,
+			5,5,4,4,4,4,5,5,
+			1,5,3,3,3,3,5,1
+		};
+		unsigned char in[64] = {
+			0,  1, 48,  2, 57, 49, 28,  3,
+			61, 58, 50, 42, 38, 29, 17,  4,
+			62, 55, 59, 36, 53, 51, 43, 22,
+			45, 39, 33, 30, 24, 18, 12,  5,
+			63, 47, 56, 27, 60, 41, 37, 16,
+			54, 35, 52, 21, 44, 32, 23, 11,
+			46, 26, 40, 15, 34, 20, 31, 10,
+			25, 14, 19,  9, 13,  8,  7,  6
+		};
+		memcpy(roxanneWeights, weights, 64);
+		memcpy(indices, in, 64);
+	}
 };
-

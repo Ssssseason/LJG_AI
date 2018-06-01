@@ -5,7 +5,9 @@
 #include<cstdio>
 #include <cstring>
 #include "bitboard.hpp"
-int Bitboard::cntOfByte[256] = { 0 };
+unsigned char Bitboard::cntOfByte[256] = {0};
+unsigned char Bitboard::roxanneWeights[64] = { 0 };
+unsigned char Bitboard::indices[64] = { 0 };
 using namespace std;
 
 const int dx[8] = { 0,1,0,-1,1,1,-1,-1 };
@@ -225,6 +227,7 @@ void print_chess(state* chess) {
 }
 
 int main() {
+	Bitboard::init();
 	clock_t start, end;
 	int num = 1000, i;
 
@@ -246,11 +249,12 @@ int main() {
 			while (!((actions >> (idx = rand() % 64)) & 1));
 			b.takeAction(tplayer, (uint64_t)1 << idx);
 			//b.printBoard();
+			//b.evaluate();
 			//printf("\n");
 			tplayer = tplayer == BLACK ? WHITE : BLACK;
 		}
-		//printf("Black: %d\n", b.getBlackNum());
-		//printf("White: %d\n", b.getWhiteNum());
+		//printf("Black: %d\n", b.getScore(BLACK));
+		//printf("White: %d\n", b.getScore(WHITE));
 	}
 	end = clock();
 	printf("%d\n", end - start);
