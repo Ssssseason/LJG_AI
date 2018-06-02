@@ -229,74 +229,77 @@ void print_chess(state* chess) {
 int main() {
 	Bitboard::init();
 	clock_t start, end;
-	int num = 1000, i;
+	int num = 1, i;
 
 	i = num;
-	start = clock();
-	while (i--) {
-		Bitboard b(0x810000000, 0x1008000000);
-		//b.printBoard();
-		Role tplayer = BLACK;
-		int idx;
-		uint64_t actions;
-		while (!b.hasEnded()) {
-			actions = b.getActions(tplayer);
-			//printf("Turn: %s\n", tplayer == BLACK ? "Black" : "White");
-			if (!actions) {
-				tplayer = tplayer == BLACK ? WHITE : BLACK;
-				continue;
-			}
-			while (!((actions >> (idx = rand() % 64)) & 1));
-			b.takeAction(tplayer, (uint64_t)1 << idx);
-			//b.printBoard();
-			//b.evaluate();
-			//printf("\n");
-			tplayer = tplayer == BLACK ? WHITE : BLACK;
-		}
-		//printf("Black: %d\n", b.getScore(BLACK));
-		//printf("White: %d\n", b.getScore(WHITE));
-	}
-	end = clock();
-	printf("%d\n", end - start);
+	Bitboard b((uint64_t)0xfee0d0c8c8a000fe, (uint64_t)0x11f2f37375cfc00);
+	b.printBoard();
+	printf("%lld %lld\n", b.getActions(BLACK), b.getActions(WHITE));
+	//start = clock();
+	//while (i--) {
+	//	Bitboard b(0x810000000, 0x1008000000);
+	//	//b.printBoard();
+	//	Role tplayer = BLACK;
+	//	int idx;
+	//	uint64_t actions;
+	//	while (!b.hasEnded()) {
+	//		actions = b.getActions(tplayer);
+	//		//printf("Turn: %s\n", tplayer == BLACK ? "Black" : "White");
+	//		if (!actions) {
+	//			tplayer = tplayer == BLACK ? WHITE : BLACK;
+	//			continue;
+	//		}
+	//		while (!((actions >> (idx = rand() % 64)) & 1));
+	//		b.takeAction(tplayer, (uint64_t)1 << idx);
+	//		//b.printBoard();
+	//		//b.evaluate();
+	//		//printf("\n");
+	//		tplayer = tplayer == BLACK ? WHITE : BLACK;
+	//	}
+	//	//printf("Black: %d\n", b.getScore(BLACK));
+	//	//printf("White: %d\n", b.getScore(WHITE));
+	//}
+	//end = clock();
+	//printf("%d\n", end - start);
 
-	i = num;
-	state chess;
-	memset(chess.data, 0, 64);
-	chess.data[3][3] = 2;
-	chess.data[4][4] = 2;
-	chess.data[3][4] = 1;
-	chess.data[4][3] = 1;
-	int human_role = 1;
-	int machine_role = 2;
-	start = clock();
-	while (i--) {
-		state tmp;
-		int tplayer = 1;
-		memcpy(tmp.data, chess.data, 64);
-		while (!tmp.is_end()) {
-			vector<pair<int, int>> actions;
-			for (int i = 0; i < 8; i++) {
-				for (int j = 0; j < 8; j++) {
-					if (tmp.data[i][j] == 0) {
-						if (tmp.check_valid(tplayer, i, j)) {
-							actions.push_back(make_pair(i, j));
-						}
-					}
-				}
-			}
-			if (actions.size()) {
-				pair<int, int>& a = actions[rand() % actions.size()];
-				tmp.reverse(tplayer, a.first, a.second);
-			}
-			tplayer = 3 - tplayer;
-		}
-		int wins = chess.is_end();
-		//if (wins == human_role) printf("human wins\n");
-		//else if (wins == machine_role) printf("machine wins\n");
-		//else printf("tie\n");
-	}
-	end = clock();
-	printf("%d\n", end - start);
+	//i = num;
+	//state chess;
+	//memset(chess.data, 0, 64);
+	//chess.data[3][3] = 2;
+	//chess.data[4][4] = 2;
+	//chess.data[3][4] = 1;
+	//chess.data[4][3] = 1;
+	//int human_role = 1;
+	//int machine_role = 2;
+	//start = clock();
+	//while (i--) {
+	//	state tmp;
+	//	int tplayer = 1;
+	//	memcpy(tmp.data, chess.data, 64);
+	//	while (!tmp.is_end()) {
+	//		vector<pair<int, int>> actions;
+	//		for (int i = 0; i < 8; i++) {
+	//			for (int j = 0; j < 8; j++) {
+	//				if (tmp.data[i][j] == 0) {
+	//					if (tmp.check_valid(tplayer, i, j)) {
+	//						actions.push_back(make_pair(i, j));
+	//					}
+	//				}
+	//			}
+	//		}
+	//		if (actions.size()) {
+	//			pair<int, int>& a = actions[rand() % actions.size()];
+	//			tmp.reverse(tplayer, a.first, a.second);
+	//		}
+	//		tplayer = 3 - tplayer;
+	//	}
+	//	int wins = chess.is_end();
+	//	//if (wins == human_role) printf("human wins\n");
+	//	//else if (wins == machine_role) printf("machine wins\n");
+	//	//else printf("tie\n");
+	//}
+	//end = clock();
+	//printf("%d\n", end - start);
 
 
 	//state chess;
