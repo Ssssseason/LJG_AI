@@ -4,7 +4,9 @@
 #include<algorithm>
 #include<cstdio>
 #include <cstring>
+#include "common.h"
 #include "bitboard.hpp"
+#include "minmax.h"
 unsigned char Bitboard::cntOfByte[256] = {0};
 unsigned char Bitboard::roxanneWeights[64] = { 0 };
 unsigned char Bitboard::indices[64] = { 0 };
@@ -226,10 +228,28 @@ void print_chess(state* chess) {
 	}
 }
 
+action minmax5(Role player, Bitboard b) {
+	return minmax(player, b, 5);
+}
+
+action minmax7(Role player, Bitboard b) {
+	return minmax(player, b, 8);
+}
+
+action run(machine f,Role player, Bitboard board){
+	return f(player, board);
+}
+
+action human(Role player, Bitboard board){
+	int x,y;
+	scanf("%d%d",&x,&y);
+	return encode_action(x-1,y-1);
+}
+
 int main() {
 	Bitboard::init();
 	clock_t start, end;
-	int num = 1000, i;
+	int num = 1, i;
 
 	i = num;
 	start = clock();
@@ -237,113 +257,133 @@ int main() {
 		Bitboard b(0x810000000, 0x1008000000);
 		//b.printBoard();
 		Role tplayer = BLACK;
+		Role human_role = WHITE;
+		Role machine_role = BLACK;
 		int idx;
-		uint64_t actions;
+		uint64_t act;
 		while (!b.hasEnded()) {
-			actions = b.getActions(tplayer);
-			//printf("Turn: %s\n", tplayer == BLACK ? "Black" : "White");
-			if (!actions) {
-				tplayer = tplayer == BLACK ? WHITE : BLACK;
-				continue;
+			b.printBoard();
+			printf("%s's turn\n",tplayer==human_role?"human":"machine");
+			// actions = b.getActions(tplayer);
+			// //printf("Turn: %s\n", tplayer == BLACK ? "Black" : "White");
+			// if (!actions) {
+			// 	tplayer = tplayer == BLACK ? WHITE : BLACK;
+			// 	continue;
+			// }
+			// while (!((actions >> (idx = rand() % 64)) & 1));
+			// b.takeAction(tplayer, (uint64_t)1 << idx);
+			// //b.printBoard();
+			// //b.evaluate();
+			// //printf("\n");
+			// tplayer = tplayer == BLACK ? WHITE : BLACK;
+			if(tplayer==human_role){
+				act = run(minmax5,tplayer,b);
 			}
-			while (!((actions >> (idx = rand() % 64)) & 1));
-			b.takeAction(tplayer, (uint64_t)1 << idx);
-			//b.printBoard();
-			//b.evaluate();
-			//printf("\n");
-			tplayer = tplayer == BLACK ? WHITE : BLACK;
+			else{
+				act = run(minmax7,tplayer,b);
+			}
+			if(act){
+				b.takeAction(tplayer, act);
+				std::pair<int, int> ta = decode_action(act);
+				printf("%s do : %d %d\n", tplayer == human_role ? "human" : "machine", ta.first+1, ta.second+1);
+			}
+			tplayer = change_player(tplayer);
 		}
-		//printf("Black: %d\n", b.getScore(BLACK));
-		//printf("White: %d\n", b.getScore(WHITE));
+		b.printBoard();
+		int hc = b.getScore(human_role);
+		int mc = b.getScore(machine_role);
+		if(hc>mc) printf("human wins\n");
+		else if(hc<mc) printf("machine wins\n");
+		else printf("tie\n");
 	}
 	end = clock();
 	printf("%d\n", end - start);
 
-	i = num;
-	state chess;
-	memset(chess.data, 0, 64);
-	chess.data[3][3] = 2;
-	chess.data[4][4] = 2;
-	chess.data[3][4] = 1;
-	chess.data[4][3] = 1;
-	int human_role = 1;
-	int machine_role = 2;
-	start = clock();
-	while (i--) {
-		state tmp;
-		int tplayer = 1;
-		memcpy(tmp.data, chess.data, 64);
-		while (!tmp.is_end()) {
-			vector<pair<int, int>> actions;
-			for (int i = 0; i < 8; i++) {
-				for (int j = 0; j < 8; j++) {
-					if (tmp.data[i][j] == 0) {
-						if (tmp.check_valid(tplayer, i, j)) {
-							actions.push_back(make_pair(i, j));
-						}
-					}
-				}
-			}
-			if (actions.size()) {
-				pair<int, int>& a = actions[rand() % actions.size()];
-				tmp.reverse(tplayer, a.first, a.second);
-			}
-			tplayer = 3 - tplayer;
-		}
-		int wins = chess.is_end();
-		//if (wins == human_role) printf("human wins\n");
-		//else if (wins == machine_role) printf("machine wins\n");
-		//else printf("tie\n");
-	}
-	end = clock();
-	printf("%d\n", end - start);
+	// i = num;
+	// state chess;
+	// memset(chess.data, 0, 64);
+	// chess.data[3][3] = 2;
+	// chess.data[4][4] = 2;
+	// chess.data[3][4] = 1;
+	// chess.data[4][3] = 1;
+	// int human_role = 1;
+	// int machine_role = 2;
+	// start = clock();
+	// while (i--) {
+	// 	state tmp;
+	// 	int tplayer = 1;
+	// 	memcpy(tmp.data, chess.data, 64);
+	// 	while (!tmp.is_end()) {
+	// 		vector<pair<int, int>> actions;
+	// 		for (int i = 0; i < 8; i++) {
+	// 			for (int j = 0; j < 8; j++) {
+	// 				if (tmp.data[i][j] == 0) {
+	// 					if (tmp.check_valid(tplayer, i, j)) {
+	// 						actions.push_back(make_pair(i, j));
+	// 					}
+	// 				}
+	// 			}
+	// 		}
+	// 		if (actions.size()) {
+	// 			pair<int, int>& a = actions[rand() % actions.size()];
+	// 			tmp.reverse(tplayer, a.first, a.second);
+	// 		}
+	// 		tplayer = 3 - tplayer;
+	// 	}
+	// 	int wins = chess.is_end();
+	// 	//if (wins == human_role) printf("human wins\n");
+	// 	//else if (wins == machine_role) printf("machine wins\n");
+	// 	//else printf("tie\n");
+	// }
+	// end = clock();
+	// printf("%d\n", end - start);
 
 
-	//state chess;
-	//memset(chess.data, 0, 64);
-	//chess.data[3][3] = 2;
-	//chess.data[4][4] = 2;
-	//chess.data[3][4] = 1;
-	//chess.data[4][3] = 1;
+	// //state chess;
+	// //memset(chess.data, 0, 64);
+	// //chess.data[3][3] = 2;
+	// //chess.data[4][4] = 2;
+	// //chess.data[3][4] = 1;
+	// //chess.data[4][3] = 1;
 
-	//int human_role = 1;
-	//int machine_role = 2;
+	// //int human_role = 1;
+	// //int machine_role = 2;
 
-	//int turn = 1;
+	// //int turn = 1;
 
-	//print_chess(&chess);
-	//while (!chess.is_end()) {
-	//	if (turn == human_role) {
-	//		int x, y;
+	// //print_chess(&chess);
+	// //while (!chess.is_end()) {
+	// //	if (turn == human_role) {
+	// //		int x, y;
 
-	//		while (1) {
-	//			printf("human input: ");
-	//			scanf("%d%d", &x, &y);
-	//			x -= 1, y -= 1;
-	//			if (chess.data[x][y] != 0 || !chess.check_valid(human_role, x, y)) {
-	//				printf("invalid input\n");
-	//			}
-	//			else break;
-	//		}
-	//		chess.reverse(human_role, x, y);
-	//		printf("human action: %d %d \n", x + 1, y + 1);
-	//		print_chess(&chess);
-	//	}
-	//	else {
-	//		pair<int, int> a = MCTS(&chess, human_role, 1000);
-	//		if (a.first == -1 && a.second == -1) printf("machine jump one turn\n");
-	//		else {
-	//			printf("machine action: %d %d \n", a.first + 1, a.second + 1);
-	//			chess.reverse(machine_role, a.first, a.second);
-	//			print_chess(&chess);
-	//		}
-	//	}
-	//	turn = 3 - turn;
-	//}
-	//int wins = chess.is_end();
-	//if (wins == human_role) printf("human wins\n");
-	//else if (wins == machine_role) printf("machine wins\n");
-	//else printf("tie\n");
+	// //		while (1) {
+	// //			printf("human input: ");
+	// //			scanf("%d%d", &x, &y);
+	// //			x -= 1, y -= 1;
+	// //			if (chess.data[x][y] != 0 || !chess.check_valid(human_role, x, y)) {
+	// //				printf("invalid input\n");
+	// //			}
+	// //			else break;
+	// //		}
+	// //		chess.reverse(human_role, x, y);
+	// //		printf("human action: %d %d \n", x + 1, y + 1);
+	// //		print_chess(&chess);
+	// //	}
+	// //	else {
+	// //		pair<int, int> a = MCTS(&chess, human_role, 1000);
+	// //		if (a.first == -1 && a.second == -1) printf("machine jump one turn\n");
+	// //		else {
+	// //			printf("machine action: %d %d \n", a.first + 1, a.second + 1);
+	// //			chess.reverse(machine_role, a.first, a.second);
+	// //			print_chess(&chess);
+	// //		}
+	// //	}
+	// //	turn = 3 - turn;
+	// //}
+	// //int wins = chess.is_end();
+	// //if (wins == human_role) printf("human wins\n");
+	// //else if (wins == machine_role) printf("machine wins\n");
+	// //else printf("tie\n");
 	system("pause");
 	return 0;
 }
