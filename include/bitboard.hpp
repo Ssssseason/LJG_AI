@@ -229,10 +229,10 @@ public:
 		int m = getMobility();
 		int p = getProtMobility();
 		int c = getCorner();
-		printf("Mobility: %d\n", m);
+		/*printf("Mobility: %d\n", m);
 		printf("ProbMobility: %d\n", p);
-		printf("Corner: %d\n", c);
-		return 0;
+		printf("Corner: %d\n", c);*/
+		return m;
 	}
 
 	void printBoard()
@@ -313,4 +313,4 @@ public:
 		memcpy(indices, in, 64);
 	}
 };
-#endif BITBOARD_HPP
+#endif
