@@ -50,9 +50,9 @@
 
     true则棋局结束
 
-  - `int getScore(Role player)`
+  - `pair<int, int> getPiceces()`
 
-    返回player拥有棋子的个数
+    返回黑白拥有棋子的个数
 
   - `double evaluate()`
      返回当前棋局评估值, 黑方越大越好，白方越小越好
@@ -81,6 +81,10 @@
 - `int scanForward(uint64_t bits)`
 
   返回bits的最低有效位
+
+- `double evaluateCombine(const Bitboard &b)`
+
+  返回评估值；目前只有这一个评估函数，其余评估函数参数相同，名字均以evaluate开头
 
 
 ​    

@@ -277,7 +277,8 @@ int main() {
 			// //printf("\n");
 			// tplayer = tplayer == BLACK ? WHITE : BLACK;
 			if(tplayer==human_role){
-				act = run(minmax5,tplayer,b);
+				//act = run(minmax5,tplayer,b);
+				act = human(tplayer, b);
 			}
 			else{
 				act = run(minmax5,tplayer,b);
@@ -290,8 +291,11 @@ int main() {
 			tplayer = change_player(tplayer);
 		}
 		b.printBoard();
-		int hc = b.getScore(human_role);
-		int mc = b.getScore(machine_role);
+		pair<int, int> pieces = b.getPieces();
+		int hc = pieces.first;
+		int mc = pieces.second;
+		//int hc = b.getScore(human_role);
+		//int mc = b.getScore(machine_role);
 		if(hc>mc) printf("human wins\n");
 		else if(hc<mc) printf("machine wins\n");
 		else printf("tie\n");
