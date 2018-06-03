@@ -23,6 +23,6 @@ inline Role change_player(Role p){
 }
 
 typedef action (*machine)(Role player,Bitboard board);
-
+typedef double(*eval)(Bitboard);
 #define infinity 999999
 #endif

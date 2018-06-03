@@ -1,7 +1,7 @@
 #include <vector>
 #include "minmax.h"
 
-static double alphabeta(Role player, double alpha, double beta, int depth, Bitboard board, action ac) {
+static double alphabeta(Role player, double alpha, double beta, int depth, Bitboard board, action ac,eval evaluate) {
 	board.takeAction(change_player(player), ac);
 	if (board.hasEnded()) {
 		Role wins = board.getScore(BLACK) > board.getScore(WHITE) ? BLACK : WHITE;
@@ -16,7 +16,7 @@ static double alphabeta(Role player, double alpha, double beta, int depth, Bitbo
 	}
 	action actions = board.getActions(player);
 	if (actions == 0) {
-		return board.evaluate();
+		return evaluate(board);
 	}
 	depth -= 1;
 	if (depth <= 0) return board.evaluate();
@@ -42,7 +42,7 @@ static double alphabeta(Role player, double alpha, double beta, int depth, Bitbo
 	}
 }
 
-action minmax(Role player, Bitboard board, int depth) {
+action minmax(Role player, Bitboard board, int depth,eval evaluate) {
 	action actions = board.getActions(player);
 	if (actions == 0) return 0;
 	double alpha = -infinity;
@@ -53,7 +53,7 @@ action minmax(Role player, Bitboard board, int depth) {
 		for (int i = 0; i < 64; i++) {
 			action act = actions & (((uint64_t)1) << i);
 			if (act) {
-				double val = alphabeta(change_player(player), alpha, beta, depth, board, act);
+				double val = alphabeta(change_player(player), alpha, beta, depth, board, act,evaluate);
 				if (val >=alpha) {
 					alpha = val;
 					res = act;
@@ -65,7 +65,7 @@ action minmax(Role player, Bitboard board, int depth) {
 		for (int i = 0; i < 64; i++) {
 			action act = actions & (((uint64_t)1) << i);
 			if (act) {
-				double val = alphabeta(change_player(player), alpha, beta, depth, board, act);
+				double val = alphabeta(change_player(player), alpha, beta, depth, board, act,evaluate);
 				if (val <= beta) {
 					beta = val;
 					res = act;
