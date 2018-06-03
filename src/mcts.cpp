@@ -1,4 +1,5 @@
 #include <vector>
+#include <math.h>
 #include "mcts.h"
 #include <stdlib.h>
 double ucb_c = 1.414;
@@ -63,6 +64,7 @@ public:
 				}
 			}
 		}
+        return childs.back();//没有返回值 随便写了一个
 	}
 };
 
