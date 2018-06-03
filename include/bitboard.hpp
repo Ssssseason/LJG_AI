@@ -9,6 +9,7 @@
 #include <cstdint>
 #include <cassert>
 #include <cstdio>
+using namespace std;
 
 enum Role
 {
@@ -79,7 +80,7 @@ private:
 		return cntOfByte[pawn & 0xff] + cntOfByte[(pawn >> 8) & 0xff] + cntOfByte[(pawn >> 16) & 0xff] + cntOfByte[(pawn >> 24) & 0xff] + cntOfByte[(pawn >> 32) & 0xff] + cntOfByte[(pawn >> 40) & 0xff] + cntOfByte[(pawn >> 48) & 0xff] + cntOfByte[(pawn >> 56) & 0xff];
 	}
 
-	uint64_t getEmpty()
+	uint64_t getEmpty() const
 	{
 		return ~(black | white);
 	}
@@ -143,7 +144,7 @@ private:
 	}
 
 public:
-	uint64_t getActions(Role player)
+	uint64_t getActions(Role player) const
 	{
 		uint64_t actions = 0;
 		uint64_t cur, opp, subOpp, tmp;
@@ -176,37 +177,53 @@ public:
 		reverseBoard(player, action);
 	}
 
-	bool isValidAction(Role player, uint64_t action)
+	bool isValidAction(Role player, uint64_t action)const
 	{
 		return action & getActions(player);
 	}
 
-	bool hasEnded()
+	bool hasEnded()const
 	{
 		return !(getActions(BLACK) | getActions(WHITE));
 	}
 
-	int getScore(Role player)
+	pair<int, int> getPieces()const
 	{
-		return getPopCnt(player == BLACK ? black : white);
+		return make_pair(getPopCnt(black), getPopCnt(white));
 	}
 
-	int getMobility()
+	pair<int, int> getMobility()const
 	{
-		return getPopCnt(getActions(BLACK)) - getPopCnt(getActions(WHITE));
+		return make_pair(getPopCnt(getActions(BLACK)), getPopCnt(getActions(WHITE)));
+		//return getPopCnt(getActions(BLACK)) - getPopCnt(getActions(WHITE));
 	}
 
-	int getProtMobility()
+	pair<int, int> getProtMobility() const
 	{
 		uint64_t empty = getEmpty();
 		uint64_t exEmpty = shiftLeft(empty) | shiftRight(empty) | shiftUp(empty) | shiftDown(empty) | shiftUpLeft(empty) | shiftUpRight(empty) |
 			shiftDownLeft(empty) | shiftDownRight(empty);
-		return getPopCnt(exEmpty & white) - getPopCnt(exEmpty & black);
+		return make_pair(getPopCnt(exEmpty & white), getPopCnt(exEmpty & black));
+		//return getPopCnt(exEmpty & white) - getPopCnt(exEmpty & black);
 	}
 
-	int getCorner()
+	pair<int, int> getCorner() const
 	{
-		return getPopCnt(0x8100000000000081 & black) - getPopCnt(0x8100000000000081 & white);
+		return make_pair(getPopCnt(0x8100000000000081 & black), getPopCnt(0x8100000000000081 & white));
+		//return getPopCnt(0x8100000000000081 & black) - getPopCnt(0x8100000000000081 & white);
+	}
+
+	pair<int, int> getRoxaneDotProduct() const {
+		int b = 0, w = 0;
+		for (int i = 0, tmp = 1; i < 64; i++, tmp << 1) {
+			if (black & tmp) {
+				b += roxanneWeights[i];
+			}
+			else if (white & tmp) {
+				w += roxanneWeights[i];
+			}
+		}
+		return make_pair(b, w);
 	}
 
 	static int scanForward(uint64_t bits) {
@@ -225,23 +242,62 @@ public:
 	}
 
 
-	double evaluate() {
-		int m = getMobility();
-		int p = getProtMobility();
-		int c = getCorner();
+	double evaluate()const {
+		// will be removed
+		pair<int, int> pm = getMobility();
+		pair<int, int> pp = getProtMobility();
+		pair<int, int> pc = getCorner();
+		pair<int, int> pr = getRoxaneDotProduct();
+		int m = pm.first - pm.second;
+		int p = pp.first - pp.second;
+		int c = pc.first - pc.second;
+		int r = pr.first - pr.second;
 		/*printf("Mobility: %d\n", m);
 		printf("ProbMobility: %d\n", p);
 		printf("Corner: %d\n", c);*/
-		return m;
+		return m + p + c * 80 + r * 80;
 	}
 
-	void printBoard()
+
+	//static double evaluateMobility(const Bitboard& b) {
+	//	return b.getMobility();
+	//}
+
+	//static double evaluateProtMobility(const Bitboard& b) {
+	//	return b.getProtMobility();
+	//}
+
+	//static double evaluateCorner(const Bitboard& b) {
+	//	return b.getCorner();
+	//}
+
+	static double evaluateCombine(const Bitboard & b) {
+
+		pair<int, int> pm = b.getMobility();
+		pair<int, int> pp = b.getProtMobility();
+		pair<int, int> pc = b.getCorner();
+		pair<int, int> pr = b.getRoxaneDotProduct();
+		int m = pm.first - pm.second;
+		int p = pp.first - pp.second;
+		int c = pc.first - pc.second;
+		int r = pr.first - pr.second;
+		/*printf("Mobility: %d\n", m);
+		printf("ProbMobility: %d\n", p);
+		printf("Corner: %d\n", c);*/
+		return m + p + c * 80 + r * 80;
+		//int m = b.getMobility();
+		//int p = b.getProtMobility();
+		//int c = b.getCorner();
+		//return m + p + c * 80;
+	}
+
+	void printBoard() const
 	{
 		uint64_t b = black, w = white;
 		printf("   ");
 		for (int i = 0; i < 8; i++)
 		{
-			printf(" %c", 'a' + i);
+			printf(" %d", i + 1);
 		}
 		printf("\n");
 
@@ -264,7 +320,7 @@ public:
 		printf("   ");
 		for (int i = 0; i < 8; i++)
 		{
-			printf(" %c", 'a' + i);
+			printf(" %d", i + 1);
 		}
 		printf("\n");
 

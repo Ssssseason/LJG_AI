@@ -9,13 +9,15 @@ inline action encode_action(int x, int y){
 }
 
 inline std::pair<int,int> decode_action(action ac){
-	int n;
-	for (int i = 0; i < 64; i++) {
-		if (ac&(((uint64_t)1) << i)) {
-			n = i; break;
-		}
-	}
-    return std::make_pair(n/8,n%8);
+	int n = Bitboard::scanForward(ac);
+	return std::make_pair(n / 8, n % 8);
+	//int n;
+	//for (int i = 0; i < 64; i++) {
+	//	if (ac&(((uint64_t)1) << i)) {
+	//		n = i; break;
+	//	}
+	//}
+ //   return std::make_pair(n/8,n%8);
 }
 
 inline Role change_player(Role p){
