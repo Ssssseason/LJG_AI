@@ -88,7 +88,8 @@ int main() {
 		}
 		else{
 			act = run(p2_engine,tplayer,b);
-
+        }
+    }
 
 	clock_t bstart, bend, wstart, wend;
 	clock_t btime, wtime;
