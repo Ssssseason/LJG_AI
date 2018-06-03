@@ -2,6 +2,7 @@
 #include <math.h>
 #include "mcts.h"
 #include <stdlib.h>
+#include <cmath>
 double ucb_c = 1.414;
 
 class node {
