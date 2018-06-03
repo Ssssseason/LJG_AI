@@ -21,6 +21,7 @@ using namespace std;
 string id="";
 string player="";
 string qipan="";
+void battle();
 
 double evaluate_combine(Bitboard b) {
 	return Bitboard::evaluateCombine(b);
@@ -38,10 +39,7 @@ action p1_engine(Role player, Bitboard b, Timer t) {
 }
 
 action p2_engine(Role player, Bitboard b, Timer t) {
-	//return mcts(b, player, 1000, t);
-	//return mc_minmax(player,b, 3, evaluate_combine,100, t);
-	return human(player, b);
-
+	return mcts(b, player, 10000, t);
 }
 
 action run(machine f,Role player, Bitboard board, Timer t){
@@ -84,118 +82,118 @@ int main() {
     //char y='5';
     //tcurl(x,y);//xy均为char
     
-	clock_t bstart, bend, wstart, wend;
-	clock_t btime, wtime;
-	int seconds = 5;
-	int num = 1;
-	while (num--) {
-		btime = 0;
-		wtime = 0;
+//	clock_t bstart, bend, wstart, wend;
+//	clock_t btime, wtime;
+//	int seconds = 5;
+//	int num = 1;
+//	while (num--) {
+//		btime = 0;
+//		wtime = 0;
+//
+//		Bitboard b(0x810000000, 0x1008000000);
+//		//b.printBoard();
+//		Role tplayer = BLACK;
+//		Role p1 = BLACK;
+//		char* p1_name = "minmax_5_combine";
+//		Role p2 = WHITE;
+//		// char* p2_name = "mcts_10000";
+//		char* p2_name = "mc_minmax";
+//		printf("BLACK: %s\t WHITE: %s\t\n", p1 == BLACK ? p1_name : p2_name, p1 == WHITE ? p1_name : p2_name);
+//		int idx;
+//		uint64_t act;
+//		while (!b.hasEnded()) {
+//			b.printBoard();
+//			printf("%s's turn\n", tplayer == p1 ? p1_name : p2_name);
+//			if (tplayer == p1) {
+//				bstart = clock();
+//				Timer t(seconds);
+//				act = run(p1_engine, tplayer, b, t);
+//				bend = clock();
+//				btime += bend - bstart;
+//			}
+//			else {
+//				wstart = clock();
+//				Timer t(seconds);
+//				act = run(p2_engine, tplayer, b, t);
+//				wend = clock();
+//				cout << t.getTimeLeft() << endl;
+//				wtime += wend - wstart;
+//			}
+//			if (act) {
+//				b.takeAction(tplayer, act);
+//				std::pair<int, int> ta = decode_action(act);
+//				printf("%s do : %d %d\n", tplayer == p1 ? p1_name : p2_name, ta.first + 1, ta.second + 1);
+//			}
+//			tplayer = change_player(tplayer);
+//
+//		}
+//		b.printBoard();
+//		std::pair<int, int> sc = b.getPieces();
+//		int bc = sc.first;
+//		int wc = sc.second;
+//		if (bc > wc) printf("BLACK WINS\n");
+//		else if (bc < wc) printf("WHITE WINS\n");
+//		else printf("TIE\n");
+//		printf("BLACK: %s\t WHITE: %s\t\n", p1 == BLACK ? p1_name : p2_name, p1 == WHITE ? p1_name : p2_name);
+//		printf("BLACK: %d\t WHITE: %d\t\n", bc, wc);
+//		printf("BLACK: %d\t WHITE: %d\t\n", btime, wtime);
+//	}
+//
+//	/*getchar();
+//	getchar();
+//*/
+//	num = 0;
+//	while (num--) {
+//		btime = 0;
+//		wtime = 0;
+//
+//		Bitboard b(0x810000000, 0x1008000000);
+//		//b.printBoard();
+//		Role tplayer = BLACK;
+//		Role p2 = BLACK;
+//		char* p2_name = "mc_minmax";
+//		Role p1 = WHITE;
+//		char* p1_name = "minmax_5_combine";
+//		printf("BLACK: %s\t WHITE: %s\t\n", p1 == BLACK ? p1_name : p2_name, p1 == WHITE ? p1_name : p2_name);
+//		int idx;
+//		uint64_t act;
+//		while (!b.hasEnded()) {
+//			//b.printBoard();
+//			//printf("%s's turn\n", tplayer == p1 ? p1_name : p2_name);
+//			if (tplayer == p1) {
+//				bstart = clock();
+//				Timer t(seconds);
+//				act = run(p1_engine, tplayer, b, t);
+//				bend = clock();
+//				btime += bend - bstart;
+//			}
+//			else {
+//				wstart = clock();
+//				Timer t(seconds);
+//				act = run(p2_engine, tplayer, b, t);
+//				wend = clock();
+//				wtime += wend - wstart;
+//			}
+//			if (act) {
+//				b.takeAction(tplayer, act);
+//				std::pair<int, int> ta = decode_action(act);
+//				//printf("%s do : %d %d\n", tplayer == p1 ? p1_name : p2_name, ta.first + 1, ta.second + 1);
+//			}
+//			tplayer = change_player(tplayer);
+//		}
+//		b.printBoard();
+//		std::pair<int, int> sc = b.getPieces();
+//		int bc = sc.first;
+//		int wc = sc.second;
+//		if (bc > wc) printf("BLACK WINS\n");
+//		else if (bc < wc) printf("WHITE WINS\n");
+//		else printf("TIE\n");
+//		printf("BLACK: %s\t WHITE: %s\t\n", p1 == BLACK ? p1_name : p2_name, p1 == WHITE ? p1_name : p2_name);
+//		printf("BLACK: %d\t WHITE: %d\t\n", bc, wc);
+//		printf("BLACK: %d\t WHITE: %d\t\n", btime, wtime);
+//	}
 
-		Bitboard b(0x810000000, 0x1008000000);
-		//b.printBoard();
-		Role tplayer = BLACK;
-		Role p1 = BLACK;
-		char* p1_name = "minmax_5_combine";
-		Role p2 = WHITE;
-		// char* p2_name = "mcts_10000";
-		char* p2_name = "mc_minmax";
-		printf("BLACK: %s\t WHITE: %s\t\n", p1 == BLACK ? p1_name : p2_name, p1 == WHITE ? p1_name : p2_name);
-		int idx;
-		uint64_t act;
-		while (!b.hasEnded()) {
-			b.printBoard();
-			printf("%s's turn\n", tplayer == p1 ? p1_name : p2_name);
-			if (tplayer == p1) {
-				bstart = clock();
-				Timer t(seconds);
-				act = run(p1_engine, tplayer, b, t);
-				bend = clock();
-				btime += bend - bstart;
-			}
-			else {
-				wstart = clock();
-				Timer t(seconds);
-				act = run(p2_engine, tplayer, b, t);
-				wend = clock();
-				cout << t.getTimeLeft() << endl;
-				wtime += wend - wstart;
-			}
-			if (act) {
-				b.takeAction(tplayer, act);
-				std::pair<int, int> ta = decode_action(act);
-				printf("%s do : %d %d\n", tplayer == p1 ? p1_name : p2_name, ta.first + 1, ta.second + 1);
-			}
-			tplayer = change_player(tplayer);
-
-		}
-		b.printBoard();
-		std::pair<int, int> sc = b.getPieces();
-		int bc = sc.first;
-		int wc = sc.second;
-		if (bc > wc) printf("BLACK WINS\n");
-		else if (bc < wc) printf("WHITE WINS\n");
-		else printf("TIE\n");
-		printf("BLACK: %s\t WHITE: %s\t\n", p1 == BLACK ? p1_name : p2_name, p1 == WHITE ? p1_name : p2_name);
-		printf("BLACK: %d\t WHITE: %d\t\n", bc, wc);
-		printf("BLACK: %d\t WHITE: %d\t\n", btime, wtime);
-	}
-
-	/*getchar();
-	getchar();
-*/
-	num = 0;
-	while (num--) {
-		btime = 0;
-		wtime = 0;
-
-		Bitboard b(0x810000000, 0x1008000000);
-		//b.printBoard();
-		Role tplayer = BLACK;
-		Role p2 = BLACK;
-		char* p2_name = "mc_minmax";
-		Role p1 = WHITE;
-		char* p1_name = "minmax_5_combine";
-		printf("BLACK: %s\t WHITE: %s\t\n", p1 == BLACK ? p1_name : p2_name, p1 == WHITE ? p1_name : p2_name);
-		int idx;
-		uint64_t act;
-		while (!b.hasEnded()) {
-			//b.printBoard();
-			//printf("%s's turn\n", tplayer == p1 ? p1_name : p2_name);
-			if (tplayer == p1) {
-				bstart = clock();
-				Timer t(seconds);
-				act = run(p1_engine, tplayer, b, t);
-				bend = clock();
-				btime += bend - bstart;
-			}
-			else {
-				wstart = clock();
-				Timer t(seconds);
-				act = run(p2_engine, tplayer, b, t);
-				wend = clock();
-				wtime += wend - wstart;
-			}
-			if (act) {
-				b.takeAction(tplayer, act);
-				std::pair<int, int> ta = decode_action(act);
-				//printf("%s do : %d %d\n", tplayer == p1 ? p1_name : p2_name, ta.first + 1, ta.second + 1);
-			}
-			tplayer = change_player(tplayer);
-		}
-		b.printBoard();
-		std::pair<int, int> sc = b.getPieces();
-		int bc = sc.first;
-		int wc = sc.second;
-		if (bc > wc) printf("BLACK WINS\n");
-		else if (bc < wc) printf("WHITE WINS\n");
-		else printf("TIE\n");
-		printf("BLACK: %s\t WHITE: %s\t\n", p1 == BLACK ? p1_name : p2_name, p1 == WHITE ? p1_name : p2_name);
-		printf("BLACK: %d\t WHITE: %d\t\n", bc, wc);
-		printf("BLACK: %d\t WHITE: %d\t\n", btime, wtime);
-	}
-
-
+	battle();
 	system("pause");
 	return 0;
 }

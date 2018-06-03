@@ -92,6 +92,8 @@ p1_engine 和 p2_engine用于包装ai引擎，里面需要做类型和格式的�
 
 在main里面修改p1 p2的Role，改变先后手
 
-minmax​引擎传入估值函数(类型`double (*)(Bitboard b)`)和搜索深度
+minmax引擎传入估值函数(类型`double (*)(Bitboard b)`)和搜索深度
 mcts引擎传入迭代次数
 human手动测试用
+
+**Alpha-Reversi**中为去年代码，eigen3为代码中使用的矩阵库，core中为核心代码，battlemain.cpp用于测试我们算法性能
