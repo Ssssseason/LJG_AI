@@ -64,7 +64,9 @@ public:
 				}
 			}
 		}
+        return childs.back();//没有返回值 随便写了一个
 	}
+    
 };
 
 void delete_node(node* n) {
