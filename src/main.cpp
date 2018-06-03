@@ -39,7 +39,7 @@ int main() {
 
 	clock_t bstart, bend, wstart, wend;
 	clock_t btime, wtime;
-	int num = 30;
+	int num = 1;
 	while (num--) {
 		btime = 0;
 		wtime = 0;
@@ -89,7 +89,7 @@ int main() {
 	}
 
 
-	num = 30;
+	num = 1;
 	while (num--) {
 		btime = 0;
 		wtime = 0;

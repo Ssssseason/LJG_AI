@@ -246,18 +246,18 @@ public:
 
 	double evaluate()const {
 		// will be removed
-		pair<int, int> pm = getMobility();
-		pair<int, int> pp = getProtMobility();
-		pair<int, int> pc = getCorner();
-		pair<int, int> pr = getRoxaneDotProduct();
-		int m = pm.first - pm.second;
-		int p = pp.first - pp.second;
-		int c = pc.first - pc.second;
-		int r = pr.first - pr.second;
-		/*printf("Mobility: %d\n", m);
-		printf("ProbMobility: %d\n", p);
-		printf("Corner: %d\n", c);*/
-		return m + p + c * 80 + r * 80;
+		pair<int, int> pMob = getMobility();
+		pair<int, int> pPMob = getProtMobility();
+		pair<int, int> pCor = getCorner();
+		pair<int, int> pRox = getRoxaneDotProduct();
+		pair<int, int> pPie = getPieces();
+		int mob = pMob.first - pMob.second;
+		int pmob = pPMob.first - pPMob.second;
+		int cor = pCor.first - pCor.second;
+		// int rox = pRox.first - pRox.second;
+		int pie = pPie.first - pPie.second;
+		return mob + pmob + cor * 80 + pie * 80;
+		// return m + p + c * 80 + r * 80;
 	}
 
 

@@ -3,6 +3,7 @@
 *.d
 *.o
 *.out
+*.log
 x64
 Debug
 reversi.sln
