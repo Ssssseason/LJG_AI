@@ -1,9 +1,3 @@
-/*
- * @Author: Yixin Ji
- * @Date: 2018-06-01 11:13:21
- * @Last Modified by:   Yixin Ji
- * @Last Modified time: 2018-06-01 11:13:21
- */
 #ifndef BITBOARD_HPP
 #define BITBOARD_HPP
 #include <cstdint>
