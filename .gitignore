@@ -9,3 +9,4 @@ reversi.sln
 reversi.vcxproj
 reversi.vcxproj.filters
 reversi.vcxproj.user
+src/main.cpp

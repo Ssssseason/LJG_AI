@@ -1,4 +1,5 @@
 #include <vector>
+#include <math.h>
 #include "mcts.h"
 #include <stdlib.h>
 #include <cmath>

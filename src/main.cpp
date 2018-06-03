@@ -6,7 +6,9 @@
 #include "minmax.h"
 #include "mcts.h"
 #include "net.hpp"
+
 #include <iostream>
+
 
 unsigned char Bitboard::cntOfByte[256] = {0};
 unsigned char Bitboard::roxanneWeights[64] = { 0 };
@@ -40,8 +42,12 @@ action human(Role player, Bitboard board){
 }
 
 int main() {
+    cout << "start" <<endl;
 	srand(time(NULL));//for mcts
 	Bitboard::init();
+	Bitboard b(0x810000000, 0x1008000000);
+	//b.printBoard();
+
 
     //网络初始化
     //请求房间号session_id 这个老师还没给 假装是2
@@ -107,6 +113,7 @@ int main() {
 				//printf("%s do : %d %d\n", tplayer == p1 ? p1_name : p2_name, ta.first + 1, ta.second + 1);
 			}
 			tplayer = change_player(tplayer);
+
 		}
 		//b.printBoard();
 		std::pair<int, int> sc = b.getPieces();
