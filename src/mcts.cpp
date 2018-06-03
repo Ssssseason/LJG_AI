@@ -101,12 +101,12 @@ int random_search(Bitboard b, Role player) {
 	else return -1;
 }
 
-action mcts(Bitboard board, Role player, int iterations) {
+action mcts(Bitboard board, Role player, int iterations, Timer t) {
 	player = change_player(player);
 	node* root = new node(board, player, NULL);
 	if (root->next_states.size() == 0) return 0;
 	if (root->next_states.size() == 1) return root->actions[0];
-	for (int i = 0; i < iterations; i++) {
+	for (int i = 0; i < iterations && t.getTimeLeft() > 0; i++) {
 		root->visited_time++;
 		node* c = root, *cp;
 		/*expand or select*/

@@ -1,6 +1,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 #include "bitboard.hpp"
+#include "timer.hpp"
 #include <algorithm>
 typedef uint64_t action;
 
@@ -24,7 +25,7 @@ inline Role change_player(Role p){
     return p==BLACK?WHITE:BLACK;
 }
 
-typedef action (*machine)(Role player,Bitboard board);
+typedef action (*machine)(Role player,Bitboard board, Timer t);
 typedef double(*eval)(Bitboard);
 #define infinity 999999
 #endif

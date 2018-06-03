@@ -273,7 +273,7 @@ public:
 	//	return b.getCorner();
 	//}
 
-	static double evaluateCombine(const Bitboard & b) {
+	static double evaluateCombine(const Bitboard &b) {
 
 		pair<int, int> pm = b.getMobility();
 		pair<int, int> pp = b.getProtMobility();
