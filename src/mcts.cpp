@@ -1,4 +1,5 @@
 #include <vector>
+#include <math.h>
 #include "mcts.h"
 #include <stdlib.h>
 #include <cmath>
@@ -64,7 +65,9 @@ public:
 				}
 			}
 		}
+        return childs.back();//没有返回值 随便写了一个
 	}
+    
 };
 
 void delete_node(node* n) {
