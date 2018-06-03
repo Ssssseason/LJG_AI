@@ -1,7 +1,7 @@
 #include <vector>
 #include "minmax.h"
 
-static double alphabeta(Role player, double alpha, double beta, int depth, Bitboard board, action ac,eval evaluate) {
+double alphabeta(Role player, double alpha, double beta, int depth, Bitboard board, action ac,eval evaluate) {
 	board.takeAction(change_player(player), ac);
 	if (board.hasEnded()) {
 		std::pair<int, int> sc = board.getPieces();

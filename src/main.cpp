@@ -31,8 +31,8 @@ action p1_engine(Role player, Bitboard b, Timer t) {
 }
 
 action p2_engine(Role player, Bitboard b, Timer t) {
-	//return mcts(b, player, 50000, t);
-	return mc_minmax(player,b, 5, evaluate_combine,1000, t);
+	return mcts(b, player, 1000, t);
+	//return mc_minmax(player,b, 3, evaluate_combine,100, t);
 }
 
 action run(machine f,Role player, Bitboard board, Timer t){
@@ -51,7 +51,7 @@ int main() {
 	srand(time(NULL));//for mcts
 
 	Bitboard::init();
-	Bitboard b(0x810000000, 0x1008000000);
+	//Bitboard b(0x810000000, 0x1008000000);
 	//b.printBoard();
 
 
@@ -84,7 +84,7 @@ int main() {
 	clock_t bstart, bend, wstart, wend;
 	clock_t btime, wtime;
 	int seconds = 5;
-	int num = 2;
+	int num = 1;
 	while (num--) {
 		btime = 0;
 		wtime = 0;
@@ -101,8 +101,8 @@ int main() {
 		int idx;
 		uint64_t act;
 		while (!b.hasEnded()) {
-			//b.printBoard();
-			//printf("%s's turn\n", tplayer == p1 ? p1_name : p2_name);
+			b.printBoard();
+			printf("%s's turn\n", tplayer == p1 ? p1_name : p2_name);
 			if (tplayer == p1) {
 				bstart = clock();
 				Timer t(seconds);
@@ -121,7 +121,7 @@ int main() {
 			if (act) {
 				b.takeAction(tplayer, act);
 				std::pair<int, int> ta = decode_action(act);
-				//printf("%s do : %d %d\n", tplayer == p1 ? p1_name : p2_name, ta.first + 1, ta.second + 1);
+				printf("%s do : %d %d\n", tplayer == p1 ? p1_name : p2_name, ta.first + 1, ta.second + 1);
 			}
 			tplayer = change_player(tplayer);
 
@@ -141,7 +141,7 @@ int main() {
 	/*getchar();
 	getchar();
 */
-	num = 2;
+	num = 0;
 	while (num--) {
 		btime = 0;
 		wtime = 0;

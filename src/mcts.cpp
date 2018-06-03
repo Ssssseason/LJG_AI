@@ -3,6 +3,7 @@
 #include "mcts.h"
 #include <stdlib.h>
 #include <cmath>
+#include "mc_minmax.h"
 double ucb_c = 1.414;
 
 class node {
@@ -77,6 +78,21 @@ void delete_node(node* n) {
 	delete n;
 }
 
+double eval_test(Bitboard b) {
+	return Bitboard::evaluateCombine(b);
+}
+
+int mc_minmax_search(Bitboard b, Role player) {
+	//double alpha = -infinity;
+	//double beta = infinity;
+	//int depth = 4;
+	//double res = mc_alphabeta(player, alpha, beta, depth, b, ac, eval evaluate);
+	double res = minmax_search(player, b, 5, eval_test);
+	if (res > 0) return BLACK;
+	else if (res < 0) return WHITE;
+	else return -1;
+}
+
 int random_search(Bitboard b, Role player) {
 	while (!b.hasEnded()) {
 		std::vector<action> actions;
@@ -102,6 +118,7 @@ int random_search(Bitboard b, Role player) {
 }
 
 action mcts(Bitboard board, Role player, int iterations, Timer t) {
+	srand(time(NULL));
 	player = change_player(player);
 	node* root = new node(board, player, NULL);
 	if (root->next_states.size() == 0) return 0;
@@ -115,7 +132,8 @@ action mcts(Bitboard board, Role player, int iterations, Timer t) {
 			c->visited_time++;
 		}
 		cp->visited_time++;
-		int wins = random_search(cp->cur_state, change_player(cp->player));
+		int wins = mc_minmax_search(cp->cur_state, change_player(cp->player));
+		//int wins = random_search(cp->cur_state, change_player(cp->player));
 		while (cp != root) {
 			if (cp->player == wins) cp->wins++;
 			cp = cp->parent;
