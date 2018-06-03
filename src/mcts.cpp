@@ -1,6 +1,6 @@
 #include <vector>
 #include "mcts.h"
-
+#include <stdlib.h>
 double ucb_c = 1.414;
 
 class node {
@@ -89,8 +89,9 @@ int random_search(Bitboard b, Role player) {
 		}
 		player = change_player(player);
 	}
-	int bc = b.getScore(BLACK);
-	int wc = b.getScore(WHITE);
+	std::pair<int, int> sc = b.getPieces();
+	int bc = sc.first;
+	int wc = sc.second;
 	if (bc < wc) return WHITE;
 	else if (bc > wc) return BLACK;
 	else return -1;

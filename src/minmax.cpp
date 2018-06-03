@@ -4,7 +4,8 @@
 static double alphabeta(Role player, double alpha, double beta, int depth, Bitboard board, action ac,eval evaluate) {
 	board.takeAction(change_player(player), ac);
 	if (board.hasEnded()) {
-		Role wins = board.getScore(BLACK) > board.getScore(WHITE) ? BLACK : WHITE;
+		std::pair<int, int> sc = board.getPieces();
+		Role wins = sc.first > sc.second ? BLACK : WHITE;
 		if (wins == BLACK) {
 			if (player == BLACK) return infinity;
 			else return -infinity;
@@ -24,7 +25,7 @@ static double alphabeta(Role player, double alpha, double beta, int depth, Bitbo
 		for (int i = 0; i < 64; i++) {
 			action act = actions & (((uint64_t)1) << i);
 			if (act) {
-				alpha = std::max(alpha, alphabeta(change_player(player), alpha, beta, depth, board, act));
+				alpha = std::max(alpha, alphabeta(change_player(player), alpha, beta, depth, board, act,evaluate));
 				if (alpha > beta) break;
 			}
 		}
@@ -34,7 +35,7 @@ static double alphabeta(Role player, double alpha, double beta, int depth, Bitbo
 		for (int i = 0; i < 64; i++) {
 			action act = actions & (((uint16_t)1) << i);
 			if (act) {
-				beta = std::min(beta, alphabeta(change_player(player), alpha, beta, depth, board, act));
+				beta = std::min(beta, alphabeta(change_player(player), alpha, beta, depth, board, act,evaluate));
 				if (beta < alpha) break;
 			}
 		}

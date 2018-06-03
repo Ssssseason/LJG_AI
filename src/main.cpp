@@ -1,23 +1,26 @@
-#include<vector>
-#include <ctime>
-#include<cmath>
-#include<algorithm>
 #include<cstdio>
-#include <cstring>
+#include <ctime>
+
 #include "common.h"
 #include "bitboard.hpp"
 #include "minmax.h"
+#include "mcts.h"
+
 unsigned char Bitboard::cntOfByte[256] = {0};
 unsigned char Bitboard::roxanneWeights[64] = { 0 };
 unsigned char Bitboard::indices[64] = { 0 };
 using namespace std;
 
+double evaluate_combine(Bitboard b) {
+	return Bitboard::evaluateCombine(b);
+}
+
 action p1_engine(Role player, Bitboard b) {
-	return minmax(player, b, 5);
+	return minmax(player, b, 5,evaluate_combine);
 }
 
 action p2_engine(Role player, Bitboard b) {
-	return minmax(player, b, 8);
+	return mcts(b, player, 10000);
 }
 
 action run(machine f,Role player, Bitboard board){
@@ -31,14 +34,16 @@ action human(Role player, Bitboard board){
 }
 
 int main() {
+	srand(time(NULL));//for mcts
 	Bitboard::init();
 	Bitboard b(0x810000000, 0x1008000000);
 	//b.printBoard();
 	Role tplayer = BLACK;
-	Role p1= WHITE;
-	char* p1_name = "human";
-	Role p2 = BLACK;
-	char* p2_name = "machine";
+	Role p1= BLACK;
+	char* p1_name = "minmax_5_combine";
+	Role p2 = WHITE;
+	char* p2_name = "mcts_1000";
+	printf("BLACK: %s\t WHITE: %s\t\n", p1 == BLACK ? p1_name : p2_name, p1 == WHITE ? p1_name : p2_name);
 	int idx;
 	uint64_t act;
 	while (!b.hasEnded()) {
@@ -58,11 +63,14 @@ int main() {
 		tplayer = change_player(tplayer);
 	}
 	b.printBoard();
-	int p1c = b.getScore(p1);
-	int p2c = b.getScore(p2);
-	if(p1c>p2c) printf("%s wins\n",p1_name);
-	else if(p1c<p2c) printf("%s wins\n",p2_name);
-	else printf("tie\n");
+	std::pair<int, int> sc = b.getPieces();
+	int bc = sc.first;
+	int wc = sc.second;
+	if (bc > wc) printf("BLACK WINS\n");
+	else if(bc<wc) printf("WHITE WINS\n");
+	else printf("TIE\n");
+	printf("BLACK: %s\t WHITE: %s\t\n", p1 == BLACK ? p1_name : p2_name, p1 == WHITE ? p1_name : p2_name);
+	printf("BLACK: %d\t WHITE: %d\t\n", bc,wc);
 	system("pause");
 	return 0;
 }
