@@ -74,10 +74,10 @@ void mainServer(int ai_seconds)
 
 				Timer t(ai_seconds);
 				//action act = run(p1_engine,first?WHITE:BLACK, b, t);
-				action act = run(p2_engine,first?WHITE:BLACK, b, t);
+				action act = run(p1_engine,first?WHITE:BLACK, b, t);
 				if (act) {
 					b.takeAction(first ? WHITE : BLACK, act);
-					b.printBoard();
+					// b.printBoard();
 					//printf("%lf\n", t.getTimeLeft());
 					reversiStepOnPos(board, Position(decode_action(act)), !first);
 				}

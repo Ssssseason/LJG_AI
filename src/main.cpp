@@ -28,7 +28,7 @@ double evaluate_combine(Bitboard b) {
 }
 
 action p1_engine(Role player, Bitboard b, Timer t) {
-	return minmax(player, b, 5, evaluate_combine);
+	return minmax(player, b, 8, evaluate_combine);
 }
 
 action p2_engine(Role player, Bitboard b, Timer t) {
