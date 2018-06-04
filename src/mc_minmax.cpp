@@ -9,8 +9,8 @@ double mc_alphabeta(Role player, double alpha, double beta, int depth, Bitboard 
 	if (board.hasEnded()) {
 		std::pair<int, int> sc = board.getPieces();
 		Role wins = sc.first > sc.second ? BLACK : WHITE;
-		if (wins == BLACK) return infinity;
-		else return -infinity;
+		if (wins == BLACK) return infinity0;
+		else return -infinity0;
 	}
 	int random = rand() % p;
 	if (random == p - 1) return evaluate(board);
@@ -48,8 +48,8 @@ action mc_minmax(Role player, Bitboard board, int depth, eval evaluate, int iter
 	if (actions == 0) return 0;
 	std::vector<int> choice_count(64, 0);
 	for (int k = 0; k < iteration && t.getTimeLeft() > 0; k++) {
-		double alpha = -infinity;
-		double beta = infinity;
+		double alpha = -infinity0;
+		double beta = infinity0;
 		//int depth = DEPTH;
 		action res = 0;
 		if (player == BLACK) {
@@ -92,14 +92,14 @@ action mc_minmax(Role player, Bitboard board, int depth, eval evaluate, int iter
 double minmax_search(Role player, Bitboard board, int depth, eval evaluate) {
 	if (board.hasEnded()) {
 		std::pair<int, int> sc = board.getPieces();
-		if (sc.first > sc.second) return infinity;
-		else if (sc.first < sc.second) return -infinity;
+		if (sc.first > sc.second) return infinity0;
+		else if (sc.first < sc.second) return -infinity0;
 		else return 0;
 	}
 	action actions = board.getActions(player);
 	if (actions == 0) return evaluate(board);
-	double alpha = -infinity;
-	double beta = infinity;
+	double alpha = -infinity0;
+	double beta = infinity0;
 	//int depth = DEPTH;
 	action res = 0;
 	if (player == BLACK) {

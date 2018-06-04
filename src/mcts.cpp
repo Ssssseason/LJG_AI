@@ -161,7 +161,7 @@ action mcts(Bitboard board, Role player, int iterations, Timer t) {
 		}
 	}*/
 	printf("ours : %d\n", i);
-	double max_wins=-infinity;
+	double max_wins=-infinity0;
 	action res;
 	for (int i = 0; i < root->childs.size(); i++) {
 		node* t = root->childs[i];

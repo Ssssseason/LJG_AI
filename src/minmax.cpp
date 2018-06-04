@@ -8,8 +8,8 @@ double alphabeta(Role player, double alpha, double beta, int depth, Bitboard boa
 	if (board.hasEnded()) {
 		std::pair<int, int> sc = board.getPieces();
 		Role wins = sc.first > sc.second ? BLACK : WHITE;
-		if (wins == BLACK) return infinity;
-		else return -infinity;
+		if (wins == BLACK) return infinity0;
+		else return -infinity0;
 	}
 	action actions = board.getActions(player);
 	if (actions == 0) {
@@ -43,8 +43,8 @@ double alphabeta(Role player, double alpha, double beta, int depth, Bitboard boa
 action minmax(Role player, Bitboard board, int depth,eval evaluate) {
 	action actions = board.getActions(player);
 	if (actions == 0) return 0;
-	double alpha = -infinity;
-	double beta = infinity;
+	double alpha = -infinity0;
+	double beta = infinity0;
 	//int depth = DEPTH;
 	action res = 0;
 	if (player == BLACK) {

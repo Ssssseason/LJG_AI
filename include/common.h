@@ -29,6 +29,6 @@ inline Role change_player(Role p){
 
 typedef action (*machine)(Role player,Bitboard board, Timer t);
 typedef double(*eval)(Bitboard);
-#define infinity INT_MAX
+#define infinity0 INT_MAX
 //#define infinity 999999
 #endif
