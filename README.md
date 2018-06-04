@@ -17,6 +17,7 @@
 
   `BLACK`, `WHITE`
 
+
 #### `Bitboard`类
 
 ##### 非静态成员变量
@@ -54,11 +55,6 @@
 
     返回黑白拥有棋子的个数
 
-  - `double evaluate()`
-     返回当前棋局评估值, 黑方越大越好，白方越小越好
-
-     *note: 待扩展， 目前返回0*
-
   - `void printBoard()`
 
      打印棋盘
@@ -86,14 +82,45 @@
 
   返回评估值；目前只有这一个评估函数，其余评估函数参数相同，名字均以evaluate开头
 
+#### `Timer`类
+##### 成员变量
+- `chrono::system_clock::time_point start`
+
+  起始时间
+- `int seconds`
+
+  限定的时间间隔
+#### 成员函数
+- `Timer(int seconds)`
+
+  构造函数，初始化seconds为传入seconds，初始化start为当前时间
+
+- `double getTimeLeft()`
+
+  返回以秒为单位的剩余时间
+
+- `double getTimePassed()`
+
+  返回以秒为单位的已经流逝的时间
+
 ## 使用方法
 
 p1_engine 和 p2_engine用于包装ai引擎，里面需要做类型和格式的调整用以适应不同的ai引擎的写法
 
 在main里面修改p1 p2的Role，改变先后手
 
-minmax引擎传入估值函数(类型`double (*)(Bitboard b)`)和搜索深度
-mcts引擎传入迭代次数
-human手动测试用
+- minmax引擎传入估值函数(类型`double (*)(Bitboard b)`)和搜索深度
+- mcts引擎传入搜索深度和时间控制类实例
+  - 搜索深度：大于0则使用minmax_search（调试中）；否则使用random_search
+  - 时间控制：限制迭代次数
+- human手动测试用
 
-**Alpha-Reversi**中为去年代码，eigen3为代码中使用的矩阵库，core中为核心代码，battlemain.cpp用于测试我们算法性能
+**Alpha-Reversi**中为去年代码，eigen3为代码中使用的矩阵库，core中为核心代码，battlemain.cpp用于测试我们算法性能。
+
+## TODO list
+
+- [x] mcst with random search
+- [x] minmax
+- [ ] mcst with mc_minmax
+- [ ] http request handle
+- [ ] ....

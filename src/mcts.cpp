@@ -86,10 +86,6 @@ double eval_test(Bitboard b) {
 }
 
 int mc_minmax_search(Bitboard b, Role player) {
-	//double alpha = -infinity;
-	//double beta = infinity;
-	//int depth = 4;
-	//double res = mc_alphabeta(player, alpha, beta, depth, b, ac, eval evaluate);
 	double res = minmax_search(player, b, 6, eval_test);
 	return res>0?1:(res==0?-1:0);
 }
@@ -161,7 +157,7 @@ action mcts(Bitboard board, Role player, int iterations, Timer t) {
 		}
 	}*/
 	printf("ours : %d\n", i);
-	double max_wins=-infinity0;
+	double max_wins=-INF;
 	action res;
 	for (int i = 0; i < root->childs.size(); i++) {
 		node* t = root->childs[i];
