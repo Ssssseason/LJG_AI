@@ -3,7 +3,9 @@
 #include "bitboard.hpp"
 #include "timer.hpp"
 #include <algorithm>
+#include <climits>
 typedef uint64_t action;
+
 
 inline action encode_action(int x, int y){
     return ((uint64_t)1)<<(x*8+y);
@@ -27,5 +29,6 @@ inline Role change_player(Role p){
 
 typedef action (*machine)(Role player,Bitboard board, Timer t);
 typedef double(*eval)(Bitboard);
-#define infinity 999999
+#define infinity INT_MAX
+//#define infinity 999999
 #endif

@@ -2,7 +2,9 @@
 #include "minmax.h"
 
 double alphabeta(Role player, double alpha, double beta, int depth, Bitboard board, action ac,eval evaluate) {
-	board.takeAction(change_player(player), ac);
+	if(ac)
+		board.takeAction(change_player(player), ac);
+	// board.takeAction(change_player(player), ac);
 	if (board.hasEnded()) {
 		std::pair<int, int> sc = board.getPieces();
 		Role wins = sc.first > sc.second ? BLACK : WHITE;
@@ -11,7 +13,8 @@ double alphabeta(Role player, double alpha, double beta, int depth, Bitboard boa
 	}
 	action actions = board.getActions(player);
 	if (actions == 0) {
-		return evaluate(board);
+		return alphabeta(change_player(player), alpha, beta, depth, board, 0, evaluate);
+		// return evaluate(board);
 	}
 	depth -= 1;
 	if (depth <= 0) return evaluate(board);
