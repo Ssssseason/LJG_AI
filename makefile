@@ -1,7 +1,7 @@
 CC = g++
-CPP_FLAGS = -I include -std=c++11
-VPATH = src include
-OBJS = main.o mcts.o minmax.o
+CPP_FLAGS = -I include -I Alpha-Reversi -std=c++11
+VPATH = src include Alpha-Reversi Alpha-Reversi/core
+OBJS = main.o mcts.o minmax.o mc_minmax.o battlemain.o uct.o reversi.o
 
 .PHONY: all
 all: $(OBJS)
