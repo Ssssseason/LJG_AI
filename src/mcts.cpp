@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <cmath>
 #include "mc_minmax.h"
-double ucb_c = 1.414;
+double ucb_c = 0.5;
 
 class node {
 public:
@@ -119,7 +119,7 @@ int random_search(Bitboard b, Role player) {
 
 action mcts(Bitboard board, Role player, int iterations, Timer t) {
 	srand(time(NULL));
-	player = change_player(player);
+	//player = change_player(player);
 	node* root = new node(board, player, NULL);
 	if (root->next_states.size() == 0) return 0;
 	if (root->next_states.size() == 1) return root->actions[0];
@@ -132,8 +132,8 @@ action mcts(Bitboard board, Role player, int iterations, Timer t) {
 			c->visited_time++;
 		}
 		cp->visited_time++;
-		int wins = mc_minmax_search(cp->cur_state, change_player(cp->player));
-		//int wins = random_search(cp->cur_state, change_player(cp->player));
+		//int wins = mc_minmax_search(cp->cur_state, change_player(cp->player));
+		int wins = random_search(cp->cur_state, change_player(cp->player));
 		while (cp != root) {
 			if (cp->player == wins) cp->wins++;
 			cp = cp->parent;

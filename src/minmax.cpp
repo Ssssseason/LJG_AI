@@ -6,21 +6,15 @@ double alphabeta(Role player, double alpha, double beta, int depth, Bitboard boa
 	if (board.hasEnded()) {
 		std::pair<int, int> sc = board.getPieces();
 		Role wins = sc.first > sc.second ? BLACK : WHITE;
-		if (wins == BLACK) {
-			if (player == BLACK) return infinity;
-			else return -infinity;
-		}
-		else {
-			if (player == WHITE) return -infinity;
-			else return infinity;
-		}
+		if (wins == BLACK) return infinity;
+		else return -infinity;
 	}
 	action actions = board.getActions(player);
 	if (actions == 0) {
 		return evaluate(board);
 	}
 	depth -= 1;
-	if (depth <= 0) return board.evaluate();
+	if (depth <= 0) return evaluate(board);
 	if (player == BLACK) {
 		for (int i = 0; i < 64; i++) {
 			action act = actions & (((uint64_t)1) << i);
