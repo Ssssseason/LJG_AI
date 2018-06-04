@@ -36,7 +36,7 @@ bool UCTTree::UCTSearch(double t, Position &best_pos)
         int delta = UCTDefaultPolicy(vl, board_t, turn, black_turn);
         UCTBackup(vl, delta, black_turn);
     }
-    // std::cout << count << std::endl;
+    std::cout << count << std::endl;
     vector<shared_ptr<UCTNode>> children(_root->getChildren());
     double best_child_score = std::numeric_limits<double>::lowest();
     for (auto &child: children)

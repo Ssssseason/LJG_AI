@@ -39,9 +39,9 @@ action p1_engine(Role player, Bitboard b, Timer t) {
 }
 
 action p2_engine(Role player, Bitboard b, Timer t) {
-	//return mcts(b, player, 10000, t);
+	return mcts(b, player, 100000, t);
 	//return mc_minmax(player, b, 8, evaluate_combine,1000,t);
-	return minmax(player, b, 6, evaluate_combine);
+	//return minmax(player, b, 6, evaluate_combine);
 }
 
 action run(machine f,Role player, Bitboard board, Timer t){

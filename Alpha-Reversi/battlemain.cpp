@@ -26,7 +26,7 @@ action run(machine f, Role player, Bitboard board, Timer t);
 
 void mainServer(int ai_seconds)
 {
-	int num = 10, i;
+	int num = 1, i;
 	bool first = true;
 
 	i = num;

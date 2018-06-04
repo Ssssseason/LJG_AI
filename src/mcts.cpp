@@ -4,14 +4,14 @@
 #include <stdlib.h>
 #include <cmath>
 #include "mc_minmax.h"
-double ucb_c = 0.5;
+double ucb_c = 1.4;
 
 class node {
 public:
 	std::vector<node*> childs;
 	node* parent;
 	int visited_time;
-	int wins;
+	double wins;
 	Role player;
 	Bitboard cur_state;
 	std::vector<Bitboard> next_states;
@@ -45,9 +45,11 @@ public:
 	}
 
 	node* expand() {
+		if (cur_state.hasEnded()) return NULL;
 		if (next_states.size() == 0) {
 			if (childs.size()) return NULL;
-			childs.push_back(new node(cur_state, change_player(player), this));
+			node* parent = this;
+			childs.push_back(new node(cur_state, change_player(player), parent));
 			return childs[0];
 		}
 		int noexpand = 0;
@@ -61,7 +63,8 @@ public:
 				if (idx--) continue;
 				else {
 					next_visited[i] = 1;
-					childs.push_back(new node(next_states[i], change_player(player), this));
+					node* parent = this;
+					childs.push_back(new node(next_states[i], change_player(player), parent));
 					return childs.back();
 				}
 			}
@@ -87,10 +90,8 @@ int mc_minmax_search(Bitboard b, Role player) {
 	//double beta = infinity;
 	//int depth = 4;
 	//double res = mc_alphabeta(player, alpha, beta, depth, b, ac, eval evaluate);
-	double res = minmax_search(player, b, 5, eval_test);
-	if (res > 0) return BLACK;
-	else if (res < 0) return WHITE;
-	else return -1;
+	double res = minmax_search(player, b, 6, eval_test);
+	return res>0?1:(res==0?-1:0);
 }
 
 int random_search(Bitboard b, Role player) {
@@ -112,37 +113,61 @@ int random_search(Bitboard b, Role player) {
 	std::pair<int, int> sc = b.getPieces();
 	int bc = sc.first;
 	int wc = sc.second;
-	if (bc < wc) return WHITE;
-	else if (bc > wc) return BLACK;
-	else return -1;
+	return bc - wc;
 }
 
 action mcts(Bitboard board, Role player, int iterations, Timer t) {
 	srand(time(NULL));
-	//player = change_player(player);
+	player = change_player(player);
 	node* root = new node(board, player, NULL);
 	if (root->next_states.size() == 0) return 0;
 	if (root->next_states.size() == 1) return root->actions[0];
-	for (int i = 0; i < iterations && t.getTimeLeft() > 0; i++) {
+	int i;
+	for (i = 0; i < iterations && t.getTimeLeft() > 0; i++) {
 		root->visited_time++;
 		node* c = root, *cp;
 		/*expand or select*/
-		while ((cp = c->expand()) == NULL) {
+		while (1) {
+			if (c->cur_state.hasEnded()) break;
+			cp = c->expand();
+			if (cp == NULL) {
+				cp = c->select();
+				cp->visited_time++;
+				c = cp;
+			}
+			else {
+				c = cp;
+				break;
+			}
+		}
+		/*while ((cp = c->expand()) == NULL) {
 			c = c->select();
 			c->visited_time++;
-		}
-		cp->visited_time++;
-		//int wins = mc_minmax_search(cp->cur_state, change_player(cp->player));
-		int wins = random_search(cp->cur_state, change_player(cp->player));
-		while (cp != root) {
-			if (cp->player == wins) cp->wins++;
-			cp = cp->parent;
+		}*/
+		c->visited_time++;
+		//double wins = mc_minmax_search(cp->cur_state, change_player(cp->player));
+		double wins = random_search(c->cur_state, change_player(c->player));
+		while (c != root) {
+			if (c->player == BLACK && wins > 0) c->wins += 1;
+			else if (c->player == WHITE && wins < 0) c->wins += 1;
+			c = c->parent;
 		}
 	}
-	node* best = root->select();
+	/*node* best = root->select();
 	action res;
 	for (unsigned int i = 0; i < root->childs.size(); i++) {
 		if (best == root->childs[i]) {
+			res = root->actions[i];
+		}
+	}*/
+	printf("ours : %d\n", i);
+	double max_wins=-infinity;
+	action res;
+	for (int i = 0; i < root->childs.size(); i++) {
+		node* t = root->childs[i];
+		double twin = 1.0*t->wins / t->visited_time;
+		if (twin > max_wins) {
+			max_wins = twin;
 			res = root->actions[i];
 		}
 	}
