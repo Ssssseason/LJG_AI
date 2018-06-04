@@ -100,7 +100,7 @@ int MC_random_search(Bitboard b, Role player) {
 }
 
 
-action MC_mct(Bitboard b, Role player, int iteration, Timer t) {
+action MC_mct(Bitboard b, Role player, Timer t) {
 	MC_node* root = new MC_node(NULL, change_player(player), b,0);
 	if (root->candidate_actions.size() == 0) {
 		delete root;
@@ -112,7 +112,7 @@ action MC_mct(Bitboard b, Role player, int iteration, Timer t) {
 		return res;
 	}
 	int i;
-	for (i = 0; i < iteration&&t.getTimeLeft()>0; i++) {
+	for (i = 0; t.getTimeLeft()>0; i++) {
 		root->visited_times++;
 		MC_node* c = root, *tc;
 		while (1) {

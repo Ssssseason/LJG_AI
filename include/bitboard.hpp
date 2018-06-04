@@ -238,7 +238,9 @@ public:
 
 	pair<int, int> getRoxaneDotProduct() const {
 		int b = 0, w = 0;
-		for (int i = 0, tmp = 1; i < 64; i++, tmp << 1) {
+		uint64_t tmp;
+		int i;
+		for (i = 0, tmp = 1; i < 64; i++, tmp << 1) {
 			if (black & tmp) {
 				b += roxanneWeights[i];
 			}
@@ -297,7 +299,7 @@ public:
 		printf("ProbMobility: %d\n", p);
 		printf("Corner: %d\n", c);*/
 		//return m + p + c * 80 + r * 10 - 40 * s;
-		return m /64.0+ p/32.0 + c /4.0 + r  - s/8.0;
+		return 4 * c - s;
 		//int m = b.getMobility();
 		//int p = b.getProtMobility();
 		//int c = b.getCorner();

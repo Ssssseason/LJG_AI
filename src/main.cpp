@@ -8,6 +8,7 @@
 #include <string>
 #include "timer.hpp"
 #include "mc_minmax.h"
+#include <climits>
 //#include "net.hpp"
 
 #include <iostream>
@@ -39,7 +40,7 @@ action p1_engine(Role player, Bitboard b, Timer t) {
 }
 
 action p2_engine(Role player, Bitboard b, Timer t) {
-	return MC_mct(b, player, 200000, t);
+	return MC_mct(b, player, t);
 	//return mc_minmax(player, b, 8, evaluate_combine,1000,t);
 	//return minmax(player, b, 6, evaluate_combine);
 }
