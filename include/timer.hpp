@@ -15,6 +15,10 @@ class Timer
         chrono::system_clock::time_point now = chrono::system_clock::now();
         return seconds - (double)chrono::duration_cast<chrono::milliseconds>(now - start).count() * chrono::milliseconds::period::num / chrono::milliseconds::period::den;
     }
+    double getTimePassed(){
+    	 chrono::system_clock::time_point now = chrono::system_clock::now();
+        return (double)chrono::duration_cast<chrono::milliseconds>(now - start).count() * chrono::milliseconds::period::num / chrono::milliseconds::period::den;
+    }
 };
 
 #endif

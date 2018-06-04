@@ -4,8 +4,9 @@
 #include <cmath>
 #include <random>
 #include "mcts.h"
+#include "mc_minmax.h"
 using namespace std;
-
+double evaluate_combine(Bitboard b);
 struct MC_node {
 public:
 	Bitboard b;
@@ -100,7 +101,7 @@ int MC_random_search(Bitboard b, Role player) {
 }
 
 
-action MC_mct(Bitboard b, Role player, Timer t) {
+action MC_mct(Bitboard b, Role player, int depth, Timer t) {
 	MC_node* root = new MC_node(NULL, change_player(player), b,0);
 	if (root->candidate_actions.size() == 0) {
 		delete root;
@@ -130,7 +131,11 @@ action MC_mct(Bitboard b, Role player, Timer t) {
 			}
 		}
 		if (c == NULL) continue;
-		int wins = MC_random_search(c->b, change_player(c->player));
+		int wins;
+		if(depth < 0)
+			wins = MC_random_search(c->b, change_player(c->player));
+		else 
+			wins = minmax_search(change_player(c->player), c->b, depth, evaluate_combine);
 		while (c != root) {
 			if (c->player == BLACK&&wins==1) {
 				c->wins++;

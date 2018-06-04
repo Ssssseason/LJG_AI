@@ -86,10 +86,6 @@ double eval_test(Bitboard b) {
 }
 
 int mc_minmax_search(Bitboard b, Role player) {
-	//double alpha = -infinity;
-	//double beta = infinity;
-	//int depth = 4;
-	//double res = mc_alphabeta(player, alpha, beta, depth, b, ac, eval evaluate);
 	double res = minmax_search(player, b, 6, eval_test);
 	return res>0?1:(res==0?-1:0);
 }
