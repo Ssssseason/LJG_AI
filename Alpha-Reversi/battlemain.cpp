@@ -2,8 +2,6 @@
 #include <iostream>
 
 
-#define MACHINE_TIME 4
-
 #include<vector>
 #include <ctime>
 #include<cmath>
@@ -26,7 +24,7 @@ action run(machine f, Role player, Bitboard board, Timer t);
 
 void mainServer(int ai_seconds)
 {
-	int num = 10, i;
+	int num = 1, i;
 	bool first = true;
 
 	i = num;
@@ -51,8 +49,8 @@ void mainServer(int ai_seconds)
 					//std::printf("AI (%d, %d)\n", best_AI_pos.x(), best_AI_pos.y());
 					reversiStepOnPos(board, best_AI_pos, first);
 					b.takeAction(first? BLACK:WHITE, encode_action(best_AI_pos.x(), best_AI_pos.y()));
-					//b.printBoard();
-				//std::cout << '\n' << board << std::endl;
+					b.printBoard();
+				std::cout << '\n' << board << std::endl;
 				}
 				else
 				{
@@ -73,13 +71,14 @@ void mainServer(int ai_seconds)
 				//turn = !turn;
 
 				Timer t(ai_seconds);
-				//action act = run(p1_engine,first?WHITE:BLACK, b, t);
 				action act = run(p1_engine,first?WHITE:BLACK, b, t);
+				// action act = run(p2_engine,first?WHITE:BLACK, b, t);
 				if (act) {
 					b.takeAction(first ? WHITE : BLACK, act);
-					// b.printBoard();
-					//printf("%lf\n", t.getTimeLeft());
+					b.printBoard();
+					printf("%lf\n", t.getTimeLeft());
 					reversiStepOnPos(board, Position(decode_action(act)), !first);
+				// std::cout << '\n' << board << std::endl;
 				}
 				turn = !turn;
 			}
@@ -112,8 +111,8 @@ void mainServer(int ai_seconds)
 					//std::printf("AI (%d, %d)\n", best_AI_pos.x(), best_AI_pos.y());
 					reversiStepOnPos(board, best_AI_pos, first);
 					b.takeAction(first? BLACK:WHITE, encode_action(best_AI_pos.x(), best_AI_pos.y()));
-					//b.printBoard();
-				//std::cout << '\n' << board << std::endl;
+					b.printBoard();
+				std::cout << '\n' << board << std::endl;
 				}
 				else
 				{
@@ -134,12 +133,12 @@ void mainServer(int ai_seconds)
 				//turn = !turn;
 
 				Timer t(ai_seconds);
-				//action act = run(p1_engine,first?WHITE:BLACK, b, t);
-				action act = run(p2_engine,first?WHITE:BLACK, b, t);
+				action act = run(p1_engine,first?WHITE:BLACK, b, t);
+				// action act = run(p2_engine,first?WHITE:BLACK, b, t);
 				if (act) {
 					b.takeAction(first ? WHITE : BLACK, act);
-					//b.printBoard();
-					//printf("%lf\n", t.getTimeLeft());
+					b.printBoard();
+					// printf("%lf\n", t.getTimeLeft());
 					reversiStepOnPos(board, Position(decode_action(act)), !first);
 				}
 				turn = !turn;
@@ -153,10 +152,9 @@ void mainServer(int ai_seconds)
 }
 
 void battle() {
-	bool machine_first = false;
 	std::printf("-1 -> machine\n1 -> you\n the chess board is a 8*8 matrix ranging from 0 to 7\n");
 	std::printf("for example,\'2 3\' means the 3rd row and 4th column\n");
-	mainServer(MACHINE_TIME);
+	mainServer(3);
 
 }
 

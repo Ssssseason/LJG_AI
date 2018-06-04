@@ -209,6 +209,33 @@ public:
 		//return getPopCnt(0x8100000000000081 & black) - getPopCnt(0x8100000000000081 & white);
 	}
 
+	pair<int, int> getSubcorner() const {
+		uint64_t emptyCorner = 0x8100000000000081 & getEmpty();
+		int b = 0, w = 0;
+		b = getPopCnt((shiftLeft(black) & emptyCorner)) 
+		+ getPopCnt((shiftRight(black) & emptyCorner))
+		+ getPopCnt((shiftUp(black) & emptyCorner))
+		+ getPopCnt((shiftDown(black) & emptyCorner))
+		+ getPopCnt((shiftUpLeft(black) & emptyCorner))
+		+ getPopCnt((shiftUpRight(black) & emptyCorner))
+		+ getPopCnt((shiftDownLeft(black) & emptyCorner))
+		+ getPopCnt((shiftDownRight(black) & emptyCorner));
+
+		w = getPopCnt((shiftLeft(white) & emptyCorner)) 
+		+ getPopCnt((shiftRight(white) & emptyCorner))
+		+ getPopCnt((shiftUp(white) & emptyCorner))
+		+ getPopCnt((shiftDown(white) & emptyCorner))
+		+ getPopCnt((shiftUpLeft(white) & emptyCorner))
+		+ getPopCnt((shiftUpRight(white) & emptyCorner))
+		+ getPopCnt((shiftDownLeft(white) & emptyCorner))
+		+ getPopCnt((shiftDownRight(white) & emptyCorner));
+		// printPawn(black);
+		// printPawn(white);
+		// printPawn(emptyCorner);
+		// printf("%d %d\n",b,w );
+		return make_pair(b, w);
+	}
+
 	pair<int, int> getRoxaneDotProduct() const {
 		int b = 0, w = 0;
 		for (int i = 0, tmp = 1; i < 64; i++, tmp << 1) {
@@ -254,33 +281,23 @@ public:
 		// return m + p + c * 80 + r * 80;
 	}
 
-
-	//static double evaluateMobility(const Bitboard& b) {
-	//	return b.getMobility();
-	//}
-
-	//static double evaluateProtMobility(const Bitboard& b) {
-	//	return b.getProtMobility();
-	//}
-
-	//static double evaluateCorner(const Bitboard& b) {
-	//	return b.getCorner();
-	//}
-
 	static double evaluateCombine(const Bitboard &b) {
 
 		pair<int, int> pm = b.getMobility();
 		pair<int, int> pp = b.getProtMobility();
 		pair<int, int> pc = b.getCorner();
 		pair<int, int> pr = b.getRoxaneDotProduct();
+		pair<int, int> ps = b.getSubcorner();
 		int m = pm.first - pm.second;
 		int p = pp.first - pp.second;
 		int c = pc.first - pc.second;
 		int r = pr.first - pr.second;
+		int s = ps.first - ps.second;
 		/*printf("Mobility: %d\n", m);
 		printf("ProbMobility: %d\n", p);
 		printf("Corner: %d\n", c);*/
-		return m + p + c * 80 + r * 20;
+		//return m + p + c * 80 + r * 10 - 40 * s;
+		return m /64.0+ p/32.0 + c /4.0 + r  - s/8.0;
 		//int m = b.getMobility();
 		//int p = b.getProtMobility();
 		//int c = b.getCorner();
@@ -351,15 +368,33 @@ public:
 		// 	5,5,4,4,4,4,5,5,
 		// 	1,5,3,3,3,3,5,1
 		// };
-		unsigned char weights[64] = {
-			5,1,3,3,3,3,1,5,
-			1,1,2,2,2,2,1,1,
-			3,2,4,4,4,4,2,3,
-			3,2,4,0,0,4,2,3,
-			3,2,4,0,0,4,2,3,
-			3,2,4,4,4,4,2,3,
-			1,1,2,2,2,2,1,1,
-			5,1,3,3,3,3,1,5
+		// unsigned char weights[64] = {
+		// 	5,1,3,3,3,3,1,5,
+		// 	1,1,2,2,2,2,1,1,
+		// 	3,2,4,4,4,4,2,3,
+		// 	3,2,4,0,0,4,2,3,
+		// 	3,2,4,0,0,4,2,3,
+		// 	3,2,4,4,4,4,2,3,
+		// 	1,1,2,2,2,2,1,1,
+		// 	5,1,3,3,3,3,1,5
+		// };
+		char weights[64] = {
+			20, -3, 11,  8,  8, 11, -3, 20,
+		    -3, -7, -4,  1,  1, -4, -7, -3,
+		    11, -4,  2,  2,  2,  2, -4, 11,
+		     8,  1,  2, -3, -3,  2,  1,  8,
+		     8,  1,  2, -3, -3,  2,  1,  8,
+		    11, -4,  2,  2,  2,  2, -4, 11,
+		    -3, -7, -4,  1,  1, -4, -7, -3,
+		    20, -3, 11,  8,  8, 11, -3, 20,
+			//  4,-4, 3, 1, 1, 3,-4, 4,
+			// -4,-5,-3,-2,-2,-3,-5,-4,
+			//  3,-3, 2, 0, 0, 2,-3, 3,
+			//  1,-2, 0,-1,-1, 0,-2,-1,
+			//  1,-2, 0,-1,-1, 0,-2,-1,
+			//  3,-3, 2, 0, 0, 2,-3, 3,
+			// -4,-5,-3,-2,-2,-3,-5,-4,
+			//  4,-4, 3, 1, 1, 3,-4, 4
 		};
 		unsigned char in[64] = {
 			0,  1, 48,  2, 57, 49, 28,  3,

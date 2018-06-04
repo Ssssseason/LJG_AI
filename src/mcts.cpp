@@ -119,7 +119,7 @@ int random_search(Bitboard b, Role player) {
 
 action mcts(Bitboard board, Role player, int iterations, Timer t) {
 	srand(time(NULL));
-	//player = change_player(player);
+	player = change_player(player);
 	node* root = new node(board, player, NULL);
 	if (root->next_states.size() == 0) return 0;
 	if (root->next_states.size() == 1) return root->actions[0];
