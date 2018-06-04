@@ -27,23 +27,25 @@ double evaluate_combine(Bitboard b) {
 	return Bitboard::evaluateCombine(b);
 }
 
+action human(Role player, Bitboard board) {
+	int x, y;
+	scanf("%d%d", &x, &y);
+	return encode_action(x - 1, y - 1);
+}
+
+
 action p1_engine(Role player, Bitboard b, Timer t) {
 	return minmax(player, b, 8, evaluate_combine);
 }
 
 action p2_engine(Role player, Bitboard b, Timer t) {
-	return mcts(b, player, 10000, t);
-	//return mc_minmax(player,b, 3, evaluate_combine,100, t);
+	//return mcts(b, player, 10000, t);
+	//return mc_minmax(player, b, 8, evaluate_combine,1000,t);
+	return minmax(player, b, 6, evaluate_combine);
 }
 
 action run(machine f,Role player, Bitboard board, Timer t){
 	return f(player, board, t);
-}
-
-action human(Role player, Bitboard board){
-	int x,y;
-	scanf("%d%d",&x,&y);
-	return encode_action(x-1,y-1);
 }
 
 int main() {
