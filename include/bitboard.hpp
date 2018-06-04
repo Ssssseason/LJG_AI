@@ -238,7 +238,7 @@ public:
 
 	pair<int, int>getRoxaneDotProduct() const {
 		int b = 0, w = 0;
-		for (int i = 0, tmp = 1; i < 64; i++, tmp << 1) {
+		for (uint64_t i = 0, tmp = 1; i < 64; i++, tmp << 1) {
 			if (black & tmp) {
 				b += roxanneWeights[i];
 			}
