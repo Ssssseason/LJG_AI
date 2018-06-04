@@ -5,9 +5,13 @@ double alphabeta(Role player, double alpha, double beta, int depth, Bitboard boa
 	board.takeAction(change_player(player), ac);
 	if (board.hasEnded()) {
 		std::pair<int, int> sc = board.getPieces();
-		Role wins = sc.first > sc.second ? BLACK : WHITE;
+		int wins = -1;
+		if (sc.first > sc.second) wins = BLACK;
+		else if (sc.first < sc.second) wins = WHITE;
+		else wins = 0;
 		if (wins == BLACK) return infinity;
-		else return -infinity;
+		else if(wins == WHITE )return -infinity;
+		else return 0;
 	}
 	action actions = board.getActions(player);
 	if (actions == 0) {

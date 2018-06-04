@@ -236,7 +236,7 @@ public:
 		return make_pair(b, w);
 	}
 
-	pair<int, int> getRoxaneDotProduct() const {
+	pair<int, int>getRoxaneDotProduct() const {
 		int b = 0, w = 0;
 		for (int i = 0, tmp = 1; i < 64; i++, tmp << 1) {
 			if (black & tmp) {
