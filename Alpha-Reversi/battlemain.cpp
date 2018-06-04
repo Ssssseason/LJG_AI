@@ -24,7 +24,7 @@ action run(machine f, Role player, Bitboard board, Timer t);
 
 void mainServer(int ai_seconds)
 {
-	int num = 1, i;
+	int num = 3, i;
 	bool first = true;
 
 	i = num;
@@ -50,7 +50,7 @@ void mainServer(int ai_seconds)
 					reversiStepOnPos(board, best_AI_pos, first);
 					b.takeAction(first? BLACK:WHITE, encode_action(best_AI_pos.x(), best_AI_pos.y()));
 					b.printBoard();
-				std::cout << '\n' << board << std::endl;
+				//std::cout << '\n' << board << std::endl;
 				}
 				else
 				{
@@ -71,8 +71,8 @@ void mainServer(int ai_seconds)
 				//turn = !turn;
 
 				Timer t(ai_seconds);
-				action act = run(p1_engine,first?WHITE:BLACK, b, t);
-				// action act = run(p2_engine,first?WHITE:BLACK, b, t);
+				//action act = run(p1_engine,first?WHITE:BLACK, b, t);
+				 action act = run(p2_engine,first?WHITE:BLACK, b, t);
 				if (act) {
 					b.takeAction(first ? WHITE : BLACK, act);
 					b.printBoard();
@@ -88,7 +88,7 @@ void mainServer(int ai_seconds)
 		printf("black: %d, white: %d\n", black, white);
 	}
 
-	i = num;
+	i =0;
 	first = false;
 	while(i--){
 		MatrixXd board;
