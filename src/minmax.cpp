@@ -49,7 +49,7 @@ action minmax(Role player, Bitboard board, int depth,eval evaluate) {
 			action act = actions & (((uint64_t)1) << i);
 			if (act) {
 				double val = alphabeta(change_player(player), alpha, beta, depth, board, act,evaluate);
-				if (val > alpha || val == alpha && (res == 0 || Bitboard::getRoxannePriority(act) < Bitboard::getRoxannePriority(res))) {
+				if (val > alpha || val == alpha && (res == 0 || Bitboard::getRoxannePriority(act) > Bitboard::getRoxannePriority(res))) {
 					alpha = val;
 					res = act;
 				}
@@ -61,7 +61,7 @@ action minmax(Role player, Bitboard board, int depth,eval evaluate) {
 			action act = actions & (((uint64_t)1) << i);
 			if (act) {
 				double val = alphabeta(change_player(player), alpha, beta, depth, board, act,evaluate);
-				if (val < beta || val == beta && (res == 0 ||  Bitboard::getRoxannePriority(act) < Bitboard::getRoxannePriority(res))) {
+				if (val < beta || val == beta && (res == 0 ||  Bitboard::getRoxannePriority(act) > Bitboard::getRoxannePriority(res))) {
 					beta = val;
 					res = act;
 				}

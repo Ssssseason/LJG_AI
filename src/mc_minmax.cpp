@@ -57,7 +57,7 @@ action mc_minmax(Role player, Bitboard board, int depth, eval evaluate, int iter
 				action act = actions & (((uint64_t)1) << i);
 				if (act) {
 					double val = mc_alphabeta(change_player(player), alpha, beta, depth, board, act, evaluate);
-					if (val > alpha || val == alpha && (res == 0 || Bitboard::getRoxannePriority(act) < Bitboard::getRoxannePriority(res))) {
+					if (val > alpha || val == alpha && (res == 0 || Bitboard::getRoxannePriority(act) > Bitboard::getRoxannePriority(res))) {
 						alpha = val;
 						res = act;
 					}
@@ -69,7 +69,7 @@ action mc_minmax(Role player, Bitboard board, int depth, eval evaluate, int iter
 				action act = actions & (((uint64_t)1) << i);
 				if (act) {
 					double val = mc_alphabeta(change_player(player), alpha, beta, depth, board, act, evaluate);
-					if (val < beta || val == beta && (res == 0 || Bitboard::getRoxannePriority(act) < Bitboard::getRoxannePriority(res))) {
+					if (val < beta || val == beta && (res == 0 || Bitboard::getRoxannePriority(act) > Bitboard::getRoxannePriority(res))) {
 						beta = val;
 						res = act;
 					}
@@ -107,7 +107,7 @@ double minmax_search(Role player, Bitboard board, int depth, eval evaluate) {
 			action act = actions & (((uint64_t)1) << i);
 			if (act) {
 				double val = mc_alphabeta(change_player(player), alpha, beta, depth, board, act, evaluate);
-				if (val > alpha || val == alpha && (res == 0 || Bitboard::getRoxannePriority(act) < Bitboard::getRoxannePriority(res))) {
+				if (val > alpha || val == alpha && (res == 0 || Bitboard::getRoxannePriority(act) > Bitboard::getRoxannePriority(res))) {
 					alpha = val;
 					res = act;
 				}
@@ -120,7 +120,7 @@ double minmax_search(Role player, Bitboard board, int depth, eval evaluate) {
 			action act = actions & (((uint64_t)1) << i);
 			if (act) {
 				double val = mc_alphabeta(change_player(player), alpha, beta, depth, board, act, evaluate);
-				if (val < beta || val == beta && (res == 0 || Bitboard::getRoxannePriority(act) < Bitboard::getRoxannePriority(res))) {
+				if (val < beta || val == beta && (res == 0 || Bitboard::getRoxannePriority(act) > Bitboard::getRoxannePriority(res))) {
 					beta = val;
 					res = act;
 				}
