@@ -6,6 +6,8 @@
 *.log
 x64
 Debug
+curl-7.60.0
+curl-7.60.0.tar.gz
 reversi.sln
 reversi.vcxproj
 reversi.vcxproj.filters

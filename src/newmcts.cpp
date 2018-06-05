@@ -132,9 +132,13 @@ action MC_mct(Bitboard b, Role player, int depth, Timer t) {
 		}
 		if (c == NULL) continue;
 		int wins;
-		if(depth < 0)
+		if(depth == 0)
 			wins = MC_random_search(c->b, change_player(c->player));
-		else 
+		else if(depth == -1){
+			double val = evaluate_combine(c->b);
+			wins = val > 0? 1: (val < 0? -1:0);
+		}
+		else if(depth > 0)
 			wins = minmax_search(change_player(c->player), c->b, depth, evaluate_combine);
 		while (c != root) {
 			if (c->player == BLACK&&wins==1) {

@@ -1,14 +1,15 @@
 CC = g++
-CPP_FLAGS = -I include -I Alpha-Reversi -std=c++11
+CPP_FLAGS = -I include -I Alpha-Reversi -std=c++11 
+LIB_FLAGS = -L/usr/local/lib -lcurl 
 VPATH = src include Alpha-Reversi Alpha-Reversi/core
 OBJS = main.o mcts.o minmax.o mc_minmax.o battlemain.o uct.o reversi.o newmcts.o
 
 .PHONY: all
 all: $(OBJS)
-	$(CC) $(CPP_FLAGS) -o reversi.out $^
+	$(CC) -o reversi.out $^ $(LIB_FLAGS)
 
 %.o: %.cpp
-	$(CC) $(CPP_FLAGS) -c -o $@ $<
+	$(CC) $(CPP_FLAGS) -c -o $@ $< 
 
 include $(OBJS:%.o=%.d)
 

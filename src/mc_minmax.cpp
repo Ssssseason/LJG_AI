@@ -116,7 +116,7 @@ int minmax_search(Role player, Bitboard board, int depth, eval evaluate) {
 	if (actions == 0) return evaluate(board);
 	double alpha = -infinity;
 	double beta = infinity;
-	double value;
+	double value = 0;
 	//int depth = DEPTH;
 	action res = 0;
 	if (player == BLACK) {
@@ -124,6 +124,7 @@ int minmax_search(Role player, Bitboard board, int depth, eval evaluate) {
 			action act = actions & (((uint64_t)1) << i);
 			if (act) {
 				double val = mc_alphabeta(change_player(player), alpha, beta, depth, board, act, evaluate);
+				value += val;
 				if (val > alpha || val == alpha && (res == 0 || Bitboard::getRoxannePriority(act) > Bitboard::getRoxannePriority(res))) {
 					alpha = val;
 					res = act;
@@ -131,13 +132,13 @@ int minmax_search(Role player, Bitboard board, int depth, eval evaluate) {
 			}
 		}
 		// return alpha;
-		value = alpha;
 	}
 	else {
 		for (int i = 0; i < 64; i++) {
 			action act = actions & (((uint64_t)1) << i);
 			if (act) {
 				double val = mc_alphabeta(change_player(player), alpha, beta, depth, board, act, evaluate);
+				value += val;
 				if (val < beta || val == beta && (res == 0 || Bitboard::getRoxannePriority(act) > Bitboard::getRoxannePriority(res))) {
 					beta = val;
 					res = act;
@@ -145,7 +146,6 @@ int minmax_search(Role player, Bitboard board, int depth, eval evaluate) {
 			}
 		}
 		// return beta;
-		value = beta;
 	}
 	//assert(res);
 	//return res;
