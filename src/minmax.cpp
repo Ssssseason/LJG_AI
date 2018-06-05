@@ -7,13 +7,15 @@ double alphabeta(Role player, double alpha, double beta, int depth, Bitboard boa
 	// board.takeAction(change_player(player), ac);
 	if (board.hasEnded()) {
 		std::pair<int, int> sc = board.getPieces();
+
 		int wins = -1;
 		if (sc.first > sc.second) wins = BLACK;
 		else if (sc.first < sc.second) wins = WHITE;
 		else wins = -1;
-		if (wins == BLACK) return infinity;
-		else if(wins == WHITE )return -infinity;
+		if (wins == BLACK) return INF;
+		else if(wins == WHITE )return -INF;
 		else return 0;
+
 	}
 	action actions = board.getActions(player);
 	if (actions == 0) {
@@ -23,7 +25,7 @@ double alphabeta(Role player, double alpha, double beta, int depth, Bitboard boa
 	depth -= 1;
 	if (depth <= 0) return evaluate(board);
 	if (player == BLACK) {
-		alpha = -infinity;
+		alpha = -INF;
 		for (int i = 0; i < 64; i++) {
 			action act = actions & (((uint64_t)1) << i);
 			if (act) {
@@ -37,7 +39,7 @@ double alphabeta(Role player, double alpha, double beta, int depth, Bitboard boa
 		return alpha;
 	}
 	else {
-		beta = infinity;
+		beta = INF;
 		for (int i = 0; i < 64; i++) {
 			action act = actions & (((uint64_t)1) << i);
 			if (act) {
@@ -55,8 +57,8 @@ double alphabeta(Role player, double alpha, double beta, int depth, Bitboard boa
 action minmax(Role player, Bitboard board, int depth,eval evaluate) {
 	action actions = board.getActions(player);
 	if (actions == 0) return 0;
-	double alpha = -infinity;
-	double beta = infinity;
+	double alpha = -INF;
+	double beta = INF;
 	//int depth = DEPTH;
 	action res = 0;
 	if (player == BLACK) {

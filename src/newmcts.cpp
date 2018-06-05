@@ -41,7 +41,7 @@ static const double ucb_c = 0.5;
 MC_node* MC_select(MC_node* root) {
 	if (root->childs.size() == 0) return NULL;
 	if (root->childs.size() == 1) return root->childs[0];
-	double max_score = -infinity;
+	double max_score = -INF;
 	MC_node* res = NULL;
 	for (auto c : root->childs) {
 		double score = double(c->wins) / c->visited_times +
@@ -152,7 +152,7 @@ action MC_mct(Bitboard b, Role player, int depth, Timer t) {
 	}
 	printf("ours %d\n", i);
 	action res = 0;
-	double max_wins = -infinity;
+	double max_wins = -INF;
 	for (int i = 0; i < root->childs.size(); i++) {
 		MC_node* tmp = root->childs[i];
 		double tmp_wins = double(tmp->wins) / tmp->visited_times;

@@ -10,13 +10,15 @@ double mc_alphabeta(Role player, double alpha, double beta, int depth, Bitboard 
 	// board.takeAction(change_player(player), ac);
 	if (board.hasEnded()) {
 		std::pair<int, int> sc = board.getPieces();
+
 		int wins = -1;
 		if (sc.first > sc.second) wins = BLACK;
 		else if (sc.first < sc.second) wins = WHITE;
 		else wins = -1;
-		if (wins == BLACK) return infinity;
-		else if(wins == WHITE )return -infinity;
+		if (wins == BLACK) return INF;
+		else if(wins == WHITE )return -INF;
 		else return 0;
+
 	}
 
 	int random = rand() % p;
@@ -29,7 +31,7 @@ double mc_alphabeta(Role player, double alpha, double beta, int depth, Bitboard 
 	depth -= 1;
 	if (depth <= 0) return evaluate(board);
 	if (player == BLACK) {
-		alpha = -infinity;
+		alpha = -INF;
 		for (int i = 0; i < 64; i++) {
 			action act = actions & (((uint64_t)1) << i);
 			if (act) {
@@ -43,7 +45,7 @@ double mc_alphabeta(Role player, double alpha, double beta, int depth, Bitboard 
 		return alpha;
 	}
 	else {
-		beta = infinity;
+		beta = INF;
 		for (int i = 0; i < 64; i++) {
 			action act = actions & (((uint64_t)1) << i);
 			if (act) {
@@ -64,8 +66,8 @@ action mc_minmax(Role player, Bitboard board, int depth, eval evaluate, int iter
 	if (actions == 0) return 0;
 	std::vector<int> choice_count(64, 0);
 	for (int k = 0; k < iteration && t.getTimeLeft() > 0; k++) {
-		double alpha = -infinity;
-		double beta = infinity;
+		double alpha = -INF;
+		double beta = INF;
 		//int depth = DEPTH;
 		action res = 0;
 		if (player == BLACK) {
@@ -108,15 +110,17 @@ action mc_minmax(Role player, Bitboard board, int depth, eval evaluate, int iter
 int minmax_search(Role player, Bitboard board, int depth, eval evaluate) {
 	if (board.hasEnded()) {
 		std::pair<int, int> sc = board.getPieces();
-		if (sc.first > sc.second) return infinity;
-		else if (sc.first < sc.second) return -infinity;
+		if (sc.first > sc.second) return INF;
+		else if (sc.first < sc.second) return -INF;
 		else return 0;
 	}
 	action actions = board.getActions(player);
 	if (actions == 0) return evaluate(board);
-	double alpha = -infinity;
-	double beta = infinity;
+
+	double alpha = -INF;
+	double beta = INF;
 	double value = 0;
+
 	//int depth = DEPTH;
 	action res = 0;
 	if (player == BLACK) {
@@ -149,5 +153,7 @@ int minmax_search(Role player, Bitboard board, int depth, eval evaluate) {
 	}
 	//assert(res);
 	//return res;
+
 	return value > 0? 1:(value<0? -1: 0);
 }
+
