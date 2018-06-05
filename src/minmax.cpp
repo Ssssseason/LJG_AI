@@ -2,39 +2,52 @@
 #include "minmax.h"
 
 double alphabeta(Role player, double alpha, double beta, int depth, Bitboard board, action ac,eval evaluate) {
-	board.takeAction(change_player(player), ac);
+	if(ac)
+		board.takeAction(change_player(player), ac);
+	// board.takeAction(change_player(player), ac);
 	if (board.hasEnded()) {
 		std::pair<int, int> sc = board.getPieces();
+
 		int wins = -1;
 		if (sc.first > sc.second) wins = BLACK;
 		else if (sc.first < sc.second) wins = WHITE;
-		else wins = 0;
-		if (wins == BLACK) return infinity;
-		else if(wins == WHITE )return -infinity;
+		else wins = -1;
+		if (wins == BLACK) return INF;
+		else if(wins == WHITE )return -INF;
 		else return 0;
+
 	}
 	action actions = board.getActions(player);
 	if (actions == 0) {
-		return evaluate(board);
+		return alphabeta(change_player(player), alpha, beta, depth, board, 0, evaluate);
+		// return evaluate(board);
 	}
 	depth -= 1;
 	if (depth <= 0) return evaluate(board);
 	if (player == BLACK) {
+		alpha = -INF;
 		for (int i = 0; i < 64; i++) {
 			action act = actions & (((uint64_t)1) << i);
 			if (act) {
-				alpha = std::max(alpha, alphabeta(change_player(player), alpha, beta, depth, board, act,evaluate));
-				if (alpha > beta) break;
+				double val = alphabeta(change_player(player), alpha, beta, depth, board, act,evaluate);
+				if (val > alpha) 
+					alpha = val;
+				if(val > beta)
+					return val;
 			}
 		}
 		return alpha;
 	}
 	else {
+		beta = INF;
 		for (int i = 0; i < 64; i++) {
-			action act = actions & (((uint16_t)1) << i);
+			action act = actions & (((uint64_t)1) << i);
 			if (act) {
-				beta = std::min(beta, alphabeta(change_player(player), alpha, beta, depth, board, act,evaluate));
-				if (beta < alpha) break;
+				double val = alphabeta(change_player(player), alpha, beta, depth, board, act,evaluate);
+				if (val < beta) 
+					beta = val;
+				if(val < alpha)
+					return val;
 			}
 		}
 		return beta;
@@ -44,8 +57,8 @@ double alphabeta(Role player, double alpha, double beta, int depth, Bitboard boa
 action minmax(Role player, Bitboard board, int depth,eval evaluate) {
 	action actions = board.getActions(player);
 	if (actions == 0) return 0;
-	double alpha = -infinity;
-	double beta = infinity;
+	double alpha = -INF;
+	double beta = INF;
 	//int depth = DEPTH;
 	action res = 0;
 	if (player == BLACK) {

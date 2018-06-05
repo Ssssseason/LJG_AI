@@ -9,13 +9,13 @@
 #include "timer.hpp"
 #include "mc_minmax.h"
 #include <climits>
-//#include "net.hpp"
-
+// #include "net.hpp"
+#include "iteration_minmax.h"
 #include <iostream>
 
 
 unsigned char Bitboard::cntOfByte[256] = {0};
-unsigned char Bitboard::roxanneWeights[64] = { 0 };
+char Bitboard::roxanneWeights[64] = { 0 };
 unsigned char Bitboard::indices[64] = { 0 };
 using namespace std;
 
@@ -36,16 +36,15 @@ action human(Role player, Bitboard board) {
 
 
 action p1_engine(Role player, Bitboard b, Timer t) {
-	//return minmax(player, b, 6, evaluate_combine);
-	return human(player, b);
+	//return MC_mct(b, player, 0, t);
+	return minmax(player, b, 6, evaluate_combine);
 }
 
 action p2_engine(Role player, Bitboard b, Timer t) {
-<<<<<<< HEAD
-	return MC_mct(b, player, 1000000, t);
-=======
-	return MC_mct(b, player, t);
->>>>>>> e3089db6071d42509ce7cb227a11eaa589c2500f
+	// 0: randowm_search; -1: heuristic evaluation;
+	// i (i > 0): the depth of minmax
+	//return MC_mct(b, player, 3, t);
+	return IMM_imm(b, player, 3, t);
 	//return mc_minmax(player, b, 8, evaluate_combine,1000,t);
 	//return minmax(player, b, 6, evaluate_combine);
 }
@@ -64,73 +63,75 @@ int main() {
 	//b.printBoard();
 
 
-    ////网络初始化
-    ////请求房间号session_id 这个老师还没给 假装是2
-    //
-    //id="2";
-    //string url="";
-    //string turn="";
-    ////1 返回整个棋盘
-    //url="http://47.89.179.202:5000/board_string/"+id;
-    //qipan=tcurl(url);
-    //cout << "棋盘"<< endl;
-    //cout << qipan << endl;
-    ////2 返回W or B
-    //url="http://47.89.179.202:5000/turn/"+id;
-    //turn=tcurl(url);
-    //cout << "turn"<< endl;
-    //cout << turn << endl;
-    ////3 返回自己白棋还是黑棋
-    //url="http://47.89.179.202:5000/create_session/"+id;
-    //player=tcurl(url);
-    //cout << "己方"<< endl;
-    //cout << player << endl;
-    ////4 下棋
-    //char x='3';
-    //char y='5';
-    //tcurl(x,y);//xy均为char
-    
+   // //网络初始化
+   // //请求房间号session_id 这个老师还没给 假装是2
+   
+   // id="2";
+   // string url="";
+   // string turn="";
+   // //1 返回整个棋盘
+   // url="http://47.89.179.202:5000/board_string/"+id;
+   // qipan=tcurl(url);
+   // cout << "棋盘"<< endl;
+   // cout << qipan << endl;
+   // //2 返回W or B
+   // url="http://47.89.179.202:5000/turn/"+id;
+   // turn=tcurl(url);
+   // cout << "turn"<< endl;
+   // cout << turn << endl;
+   // //3 返回自己白棋还是黑棋
+   // url="http://47.89.179.202:5000/create_session/"+id;
+   // player=tcurl(url);
+   // cout << "己方"<< endl;
+   // cout << player << endl;
+   // //4 下棋
+   // char x='3';
+   // char y='5';
+   // tcurl(x,y);//xy均为char
+   
 	clock_t bstart, bend, wstart, wend;
-	clock_t btime, wtime;
+	clock_t p1time, p2time;
 	int seconds = 10;
 	int num = 1;
 	while (num--) {
-		btime = 0;
-		wtime = 0;
+		p1time = 0;
+		p2time = 0;
 
 		Bitboard b(0x810000000, 0x1008000000);
 		//b.printBoard();
 		Role tplayer = BLACK;
 		Role p1 = BLACK;
+		//char* p1_name = "mcts_0";
 		char* p1_name = "minmax_6_combine";
 		Role p2 = WHITE;
 		// char* p2_name = "mcts_10000";
-		char* p2_name = "mcts";
+		char* p2_name = "human";
 		printf("BLACK: %s\t WHITE: %s\t\n", p1 == BLACK ? p1_name : p2_name, p1 == WHITE ? p1_name : p2_name);
 		int idx;
 		uint64_t act;
 		while (!b.hasEnded()) {
 			b.printBoard();
-			printf("%s's turn\n", tplayer == p1 ? p1_name : p2_name);
+			// printf("%s's turn\n", tplayer == p1 ? p1_name : p2_name);
 			if (tplayer == p1) {
 				bstart = clock();
 				Timer t(seconds);
 				act = run(p1_engine, tplayer, b, t);
 				bend = clock();
-				btime += bend - bstart;
+				p1time += bend - bstart;
 			}
 			else {
 				wstart = clock();
 				Timer t(seconds);
 				act = run(p2_engine, tplayer, b, t);
+				//act = human(tplayer, b);
 				wend = clock();
 				cout << t.getTimeLeft() << endl;
-				wtime += wend - wstart;
+				p2time += wend - wstart;
 			}
 			if (act) {
 				b.takeAction(tplayer, act);
 				std::pair<int, int> ta = decode_action(act);
-				printf("%s do : %d %d\n", tplayer == p1 ? p1_name : p2_name, ta.first + 1, ta.second + 1);
+				// printf("%s do : %d %d\n", tplayer == p1 ? p1_name : p2_name, ta.first + 1, ta.second + 1);
 			}
 			tplayer = change_player(tplayer);
 
@@ -144,43 +145,46 @@ int main() {
 		else printf("TIE\n");
 		printf("BLACK: %s\t WHITE: %s\t\n", p1 == BLACK ? p1_name : p2_name, p1 == WHITE ? p1_name : p2_name);
 		printf("BLACK: %d\t WHITE: %d\t\n", bc, wc);
-		printf("BLACK: %d\t WHITE: %d\t\n", btime, wtime);
+		printf("BLACK: %ld\t WHITE: %ld\t\n", p1 == BLACK? p1time: p2time, p1 == WHITE? p1time: p2time);
 	}
 
 	/*getchar();
 	getchar();
-*/
-	num = 4;
+	*/
+
+	num = 1;
 	while (num--) {
-		btime = 0;
-		wtime = 0;
+		p1time = 0;
+		p2time = 0;
 
 		Bitboard b(0x810000000, 0x1008000000);
-		//b.printBoard();
+		b.printBoard();
 		Role tplayer = BLACK;
 		Role p2 = BLACK;
-		char* p2_name = "mcts";
+		char* p2_name = "human";
 		Role p1 = WHITE;
-		char* p1_name = "minmax_6_combine";
+		//char* p1_name = "mcts_0";
+		 char* p1_name = "minmax_6_combine";
 		printf("BLACK: %s\t WHITE: %s\t\n", p1 == BLACK ? p1_name : p2_name, p1 == WHITE ? p1_name : p2_name);
 		int idx;
 		uint64_t act;
 		while (!b.hasEnded()) {
-			//b.printBoard();
+			b.printBoard();
 			//printf("%s's turn\n", tplayer == p1 ? p1_name : p2_name);
 			if (tplayer == p1) {
 				bstart = clock();
 				Timer t(seconds);
 				act = run(p1_engine, tplayer, b, t);
 				bend = clock();
-				btime += bend - bstart;
+				p1time += bend - bstart;
 			}
 			else {
 				wstart = clock();
 				Timer t(seconds);
+				//act = human(tplayer, b);
 				act = run(p2_engine, tplayer, b, t);
 				wend = clock();
-				wtime += wend - wstart;
+				p2time += wend - wstart;
 			}
 			if (act) {
 				b.takeAction(tplayer, act);
@@ -198,10 +202,10 @@ int main() {
 		else printf("TIE\n");
 		printf("BLACK: %s\t WHITE: %s\t\n", p1 == BLACK ? p1_name : p2_name, p1 == WHITE ? p1_name : p2_name);
 		printf("BLACK: %d\t WHITE: %d\t\n", bc, wc);
-		printf("BLACK: %d\t WHITE: %d\t\n", btime, wtime);
+		printf("BLACK: %ld\t WHITE: %ld\t\n", p1 == BLACK? p1time: p2time, p1 == WHITE? p1time: p2time);
 	}
-//
-	battle();
+
+	// battle();
 	system("pause");
 	return 0;
 }

@@ -17,7 +17,7 @@ class Bitboard
 {
 private:
 	static unsigned char cntOfByte[256];
-	static unsigned char roxanneWeights[64];
+	static char roxanneWeights[64];
 	static unsigned char indices[64];
 
 public:
@@ -236,11 +236,11 @@ public:
 		return make_pair(b, w);
 	}
 
-	pair<int, int>getRoxaneDotProduct() const {
+	pair<int, int> getRoxaneDotProduct() const {
 		int b = 0, w = 0;
 		uint64_t tmp;
 		int i;
-		for (i = 0, tmp = 1; i < 64; i++, tmp = tmp << 1) {
+		for (i = 0, tmp = 1; i < 64; i++, tmp += tmp) {
 			if (black & tmp) {
 				b += roxanneWeights[i];
 			}
@@ -267,21 +267,21 @@ public:
 	}
 
 
-	double evaluate()const {
-		// will be removed
-		pair<int, int> pMob = getMobility();
-		pair<int, int> pPMob = getProtMobility();
-		pair<int, int> pCor = getCorner();
-		pair<int, int> pRox = getRoxaneDotProduct();
-		pair<int, int> pPie = getPieces();
-		int mob = pMob.first - pMob.second;
-		int pmob = pPMob.first - pPMob.second;
-		int cor = pCor.first - pCor.second;
-		// int rox = pRox.first - pRox.second;
-		int pie = pPie.first - pPie.second;
-		return mob + pmob + cor * 80 + pie * 80;
-		// return m + p + c * 80 + r * 80;
-	}
+	// double evaluate()const {
+	// 	// will be removed
+	// 	pair<int, int> pMob = getMobility();
+	// 	pair<int, int> pPMob = getProtMobility();
+	// 	pair<int, int> pCor = getCorner();
+	// 	pair<int, int> pRox = getRoxaneDotProduct();
+	// 	pair<int, int> pPie = getPieces();
+	// 	int mob = pMob.first - pMob.second;
+	// 	int pmob = pPMob.first - pPMob.second;
+	// 	int cor = pCor.first - pCor.second;
+	// 	// int rox = pRox.first - pRox.second;
+	// 	int pie = pPie.first - pPie.second;
+	// 	return mob + pmob + cor * 80 + pie * 80;
+	// 	// return m + p + c * 80 + r * 80;
+	// }
 
 	static double evaluateCombine(const Bitboard &b) {
 
@@ -290,16 +290,25 @@ public:
 		pair<int, int> pc = b.getCorner();
 		pair<int, int> pr = b.getRoxaneDotProduct();
 		pair<int, int> ps = b.getSubcorner();
-		int m = pm.first - pm.second;
-		int p = pp.first - pp.second;
+		pair<int, int> ppi = b.getPieces();
+		double m = pm.first > pm.second ? 1.0*pm.first/(pm.first+pm.second) : 
+					(pm.first<pm.second?-1.0*pm.second/(pm.first+pm.second):0);
+		//int m = pm.first - pm.second;
+		double p = pp.first > pp.second? 1.0*pp.first/(pp.first+pp.second):
+					(pp.first < pp.second? -1.0*pp.second/(pp.first+pp.second):0);
+		// int p = pp.first - pp.second;
 		int c = pc.first - pc.second;
 		int r = pr.first - pr.second;
 		int s = ps.first - ps.second;
+		double pi = ppi.first > ppi.second? 1.0*ppi.first/(ppi.first + ppi.second):
+					(ppi.first<ppi.second? -1.0*ppi.second/(ppi.first+ppi.second):0);
 		/*printf("Mobility: %d\n", m);
 		printf("ProbMobility: %d\n", p);
 		printf("Corner: %d\n", c);*/
 		//return m + p + c * 80 + r * 10 - 40 * s;
-		return 4 * c - s;
+		// return 4 * c - s;
+		//return (78922*m+ 74396*p+20025*c+10 * r-4775*s + 1000*pi);
+		return 789.22*m+ 743.96*p+200.25*c+0.1 * r-47.75*s + 10*pi;
 		//int m = b.getMobility();
 		//int p = b.getProtMobility();
 		//int c = b.getCorner();

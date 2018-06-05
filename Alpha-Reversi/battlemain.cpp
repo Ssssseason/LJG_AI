@@ -71,7 +71,7 @@ void mainServer(int ai_seconds)
 				//turn = !turn;
 
 				Timer t(ai_seconds);
-				action act = run(p1_engine,first?WHITE:BLACK, b, t);
+				action act = run(p2_engine,first?WHITE:BLACK, b, t);
 				// action act = run(p2_engine,first?WHITE:BLACK, b, t);
 				if (act) {
 					b.takeAction(first ? WHITE : BLACK, act);
@@ -133,7 +133,7 @@ void mainServer(int ai_seconds)
 				//turn = !turn;
 
 				Timer t(ai_seconds);
-				action act = run(p1_engine,first?WHITE:BLACK, b, t);
+				action act = run(p2_engine,first?WHITE:BLACK, b, t);
 				// action act = run(p2_engine,first?WHITE:BLACK, b, t);
 				if (act) {
 					b.takeAction(first ? WHITE : BLACK, act);
@@ -154,7 +154,7 @@ void mainServer(int ai_seconds)
 void battle() {
 	std::printf("-1 -> machine\n1 -> you\n the chess board is a 8*8 matrix ranging from 0 to 7\n");
 	std::printf("for example,\'2 3\' means the 3rd row and 4th column\n");
-	mainServer(3);
+	mainServer(10);
 
 }
 
