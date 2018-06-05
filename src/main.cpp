@@ -9,7 +9,7 @@
 #include "timer.hpp"
 #include "mc_minmax.h"
 #include <climits>
-//#include "net.hpp"
+#include "net.hpp"
 
 #include <iostream>
 
@@ -84,6 +84,8 @@ int main() {
    //char x='3';
    //char y='5';
    //tcurl(x,y);//xy均为char
+    Bitboard b(0x810000000, 0x1008000000);
+    changeData("0.0.0.0.0.0.0.0;0.0.0.0.0.0.0.0;0.0.0.0.0.0.0.0;0.0.0.W.B.0.0.0;0.0.0.B.W.0. 0.0;0.0.0.0.0.0.0.0;0.0.0.0.0.0.0.0;0.0.0.0.0.0.0.0",b);
    
 	clock_t bstart, bend, wstart, wend;
 	clock_t p1time, p2time;

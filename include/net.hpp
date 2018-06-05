@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include "curl/curl.h"
 #include <iostream>
+#include "bitboard.hpp"
 using namespace std;
 
 extern string id;
@@ -25,5 +26,6 @@ string tcurl(string url);
 void tcurl(char x, char y);
 
 size_t myWrite( void *ptr, size_t size, size_t nmemb, void *stream);
+void changeData(string netData,Bitboard b);
 
 #endif /* net_hpp */

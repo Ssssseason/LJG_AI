@@ -75,3 +75,28 @@ size_t myWrite( void *ptr, size_t size, size_t nmemb, void *stream){
     str->append(pData,nmemb*size);
     return nmemb*size;
 }
+void changeData(string netData,Bitboard b){
+    b.white=0;
+    b.black=0;
+    for(int i=7;i>=0;i--){
+        for(int j=7;j>=0;j--){
+            if(netData[i*16+j*2]=='W'){
+                b.white=b.white*2+1;
+                b.black*=2;
+            }
+            else if(netData[i*16+j*2]=='B'){
+                b.white*=2;
+                b.black=b.black*2+1;
+            }
+            else {
+                b.white*=2;
+                b.black*=2;
+            }
+        }
+    }
+    //cout << b.white<<endl;
+    //printf("%llx\n",b.white);
+    //cout << b.black<<endl;
+    //printf("%llx\n",b.black);
+    
+}
