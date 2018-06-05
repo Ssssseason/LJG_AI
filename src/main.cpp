@@ -9,7 +9,9 @@
 #include "timer.hpp"
 #include "mc_minmax.h"
 #include <climits>
-#include "net.hpp"
+
+// #include "net.hpp"
+
 
 #include <iostream>
 
@@ -36,10 +38,13 @@ action human(Role player, Bitboard board) {
 
 
 action p1_engine(Role player, Bitboard b, Timer t) {
+	//return MC_mct(b, player, 0, t);
 	return minmax(player, b, 6, evaluate_combine);
 }
 
 action p2_engine(Role player, Bitboard b, Timer t) {
+	// 0: randowm_search; -1: heuristic evaluation;
+	// i (i > 0): the depth of minmax
 	return MC_mct(b, player, 3, t);
 	//return mc_minmax(player, b, 8, evaluate_combine,1000,t);
 	//return minmax(player, b, 6, evaluate_combine);
@@ -57,6 +62,7 @@ int main() {
 	Bitboard::init();
 	//Bitboard b(0x810000000, 0x1008000000);
 	//b.printBoard();
+
 
 
    ////网络初始化
@@ -84,13 +90,14 @@ int main() {
    //char x='3';
    //char y='5';
    //tcurl(x,y);//xy均为char
-    Bitboard b(0x810000000, 0x1008000000);
-    changeData("0.0.0.0.0.0.0.0;0.0.0.0.0.0.0.0;0.0.0.0.0.0.0.0;0.0.0.W.B.0.0.0;0.0.0.B.W.0. 0.0;0.0.0.0.0.0.0.0;0.0.0.0.0.0.0.0;0.0.0.0.0.0.0.0",b);
+    //Bitboard b(0x810000000, 0x1008000000);
+    //changeData("0.0.0.0.0.0.0.0;0.0.0.0.0.0.0.0;0.0.0.0.0.0.0.0;0.0.0.W.B.0.0.0;0.0.0.B.W.0. 0.0;0.0.0.0.0.0.0.0;0.0.0.0.0.0.0.0;0.0.0.0.0.0.0.0",b);
+
    
 	clock_t bstart, bend, wstart, wend;
 	clock_t p1time, p2time;
-	int seconds = 10;
-	int num = 2;
+	int seconds = 60;
+	int num = 1;
 	while (num--) {
 		p1time = 0;
 		p2time = 0;
@@ -99,10 +106,11 @@ int main() {
 		//b.printBoard();
 		Role tplayer = BLACK;
 		Role p1 = BLACK;
+		//char* p1_name = "mcts_0";
 		char* p1_name = "minmax_6_combine";
 		Role p2 = WHITE;
 		// char* p2_name = "mcts_10000";
-		char* p2_name = "mcts_3";
+		char* p2_name = "human";
 		printf("BLACK: %s\t WHITE: %s\t\n", p1 == BLACK ? p1_name : p2_name, p1 == WHITE ? p1_name : p2_name);
 		int idx;
 		uint64_t act;
@@ -119,7 +127,8 @@ int main() {
 			else {
 				wstart = clock();
 				Timer t(seconds);
-				act = run(p2_engine, tplayer, b, t);
+				//act = run(p2_engine, tplayer, b, t);
+				act = human(tplayer, b);
 				wend = clock();
 				cout << t.getTimeLeft() << endl;
 				p2time += wend - wstart;
@@ -148,7 +157,7 @@ int main() {
 	getchar();
 	*/
 
-	num = 2;
+	num = 1;
 	while (num--) {
 		p1time = 0;
 		p2time = 0;
@@ -157,9 +166,10 @@ int main() {
 		//b.printBoard();
 		Role tplayer = BLACK;
 		Role p2 = BLACK;
-		char* p2_name = "mcts_3";
+		char* p2_name = "human";
 		Role p1 = WHITE;
-		char* p1_name = "minmax_6_combine";
+		//char* p1_name = "mcts_0";
+		 char* p1_name = "minmax_6_combine";
 		printf("BLACK: %s\t WHITE: %s\t\n", p1 == BLACK ? p1_name : p2_name, p1 == WHITE ? p1_name : p2_name);
 		int idx;
 		uint64_t act;
@@ -176,7 +186,8 @@ int main() {
 			else {
 				wstart = clock();
 				Timer t(seconds);
-				act = run(p2_engine, tplayer, b, t);
+				act = human(tplayer, b);
+				//act = run(p2_engine, tplayer, b, t);
 				wend = clock();
 				p2time += wend - wstart;
 			}
