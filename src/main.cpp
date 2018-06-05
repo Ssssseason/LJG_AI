@@ -9,6 +9,7 @@
 #include "timer.hpp"
 #include "mc_minmax.h"
 #include <climits>
+
 // #include "net.hpp"
 #include "iteration_minmax.h"
 #include <iostream>
@@ -63,31 +64,35 @@ int main() {
 	//b.printBoard();
 
 
-   // //网络初始化
-   // //请求房间号session_id 这个老师还没给 假装是2
-   
-   // id="2";
-   // string url="";
-   // string turn="";
-   // //1 返回整个棋盘
-   // url="http://47.89.179.202:5000/board_string/"+id;
-   // qipan=tcurl(url);
-   // cout << "棋盘"<< endl;
-   // cout << qipan << endl;
-   // //2 返回W or B
-   // url="http://47.89.179.202:5000/turn/"+id;
-   // turn=tcurl(url);
-   // cout << "turn"<< endl;
-   // cout << turn << endl;
-   // //3 返回自己白棋还是黑棋
-   // url="http://47.89.179.202:5000/create_session/"+id;
-   // player=tcurl(url);
-   // cout << "己方"<< endl;
-   // cout << player << endl;
-   // //4 下棋
-   // char x='3';
-   // char y='5';
-   // tcurl(x,y);//xy均为char
+
+   ////网络初始化
+   ////请求房间号session_id 这个老师还没给 假装是2
+   //
+   //id="2";
+   //string url="";
+   //string turn="";
+   ////1 返回整个棋盘
+   //url="http://47.89.179.202:5000/board_string/"+id;
+   //qipan=tcurl(url);
+   //cout << "棋盘"<< endl;
+   //cout << qipan << endl;
+   ////2 返回W or B
+   //url="http://47.89.179.202:5000/turn/"+id;
+   //turn=tcurl(url);
+   //cout << "turn"<< endl;
+   //cout << turn << endl;
+   ////3 返回自己白棋还是黑棋
+   //url="http://47.89.179.202:5000/create_session/"+id;
+   //player=tcurl(url);
+   //cout << "己方"<< endl;
+   //cout << player << endl;
+   ////4 下棋
+   //char x='3';
+   //char y='5';
+   //tcurl(x,y);//xy均为char
+    //Bitboard b(0x810000000, 0x1008000000);
+    //changeData("0.0.0.0.0.0.0.0;0.0.0.0.0.0.0.0;0.0.0.0.0.0.0.0;0.0.0.W.B.0.0.0;0.0.0.B.W.0. 0.0;0.0.0.0.0.0.0.0;0.0.0.0.0.0.0.0;0.0.0.0.0.0.0.0",b);
+
    
 	clock_t bstart, bend, wstart, wend;
 	clock_t p1time, p2time;
