@@ -4,6 +4,7 @@
 #include <cmath>
 #include <random>
 #include "minmax.h"
+#include "mc_minmax.h"
 #include "iteration_minmax.h"
 
 using namespace std;
@@ -19,8 +20,9 @@ public:
 	IMM_node* parent;
 	double score;
 	Role player;// playing player
-	IMM_node(IMM_node* parent, Role player, Bitboard b, action acted) :
-		parent(parent), b(b),score(0),player(player), acted(acted) {
+	int p;
+	IMM_node(IMM_node* parent, Role player, Bitboard b, action acted, int p) :
+		parent(parent), b(b),score(0),player(player), acted(acted), p(p) {
 	}
 	~IMM_node() {
 		for (auto c : childs) {
@@ -54,6 +56,8 @@ IMM_node* IMM_select(IMM_node* root) {
 
 
 double IMM_minmax(IMM_node* root) {
+	srand(time(NULL));
+	int p = root->p;
 	if (root->b.hasEnded()) {
 		pair<int, int> sc = root->b.getPieces();
 		if (sc.first > sc.second) root->score = INF;
@@ -65,7 +69,7 @@ double IMM_minmax(IMM_node* root) {
 	Role player = root->player;
 	action actions = board.getActions(player);
 	if (actions == 0) {
-		IMM_node* tmp = new IMM_node(root, change_player(player), board, 0);
+		IMM_node* tmp = new IMM_node(root, change_player(player), board, 0, p);
 		root->childs.push_back(tmp);
 		root->score = IMM_minmax(tmp);
 		return root->score;
@@ -78,13 +82,17 @@ double IMM_minmax(IMM_node* root) {
 		for (int i = 0; i < 64; i++) {
 			action act = actions & (((uint64_t)1) << i);
 			if (act) {
-				double val = alphabeta(change_player(player), alpha, beta, imm_depth, board, act, evaluate_combine);
+				double val;
+				if(p > 0) 
+					val = mc_alphabeta(change_player(player), alpha, beta, imm_depth, board, act, p, evaluate_combine);
+				else if(p == 0)
+					val = alphabeta(change_player(player), alpha, beta, imm_depth, board, act, evaluate_combine);
 				if (val >= alpha) {
 					alpha = val;
 				}
 				Bitboard tmpb = board;
 				tmpb.takeAction(player, act);
-				IMM_node* tmp = new IMM_node(root, change_player(player), tmpb, act);
+				IMM_node* tmp = new IMM_node(root, change_player(player), tmpb, act, p);
 				tmp->score = val;
 				root->childs.push_back(tmp);
 			}
@@ -95,13 +103,17 @@ double IMM_minmax(IMM_node* root) {
 		for (int i = 0; i < 64; i++) {
 			action act = actions & (((uint64_t)1) << i);
 			if (act) {
-				double val = alphabeta(change_player(player), alpha, beta, imm_depth, board, act, evaluate_combine);
+				double val;
+				if(p > 0) 
+					val = mc_alphabeta(change_player(player), alpha, beta, imm_depth, board, act, p, evaluate_combine);
+				else if(p == 0)
+					val = alphabeta(change_player(player), alpha, beta, imm_depth, board, act, evaluate_combine);
 				if (val <= beta) {
 					beta = val;
 				}
 				Bitboard tmpb = board;
 				tmpb.takeAction(player, act);
-				IMM_node* tmp = new IMM_node(root, change_player(player), tmpb, act);
+				IMM_node* tmp = new IMM_node(root, change_player(player), tmpb, act, p);
 				tmp->score = val;
 				root->childs.push_back(tmp);
 			}
@@ -113,7 +125,7 @@ double IMM_minmax(IMM_node* root) {
 
 
 
-action IMM_imm(Bitboard b, Role player, int depth, Timer t) {
+action IMM_imm(Bitboard b, Role player, int depth, int p, Timer t) {
 	imm_depth = depth;
 	if (b.hasEnded()) return 0;
 	action actions = b.getActions(player);
@@ -127,7 +139,7 @@ action IMM_imm(Bitboard b, Role player, int depth, Timer t) {
 		}
 	}
 	if (cnt == 1) return res;
-	IMM_node* root = new IMM_node(NULL, player, b,0);
+	IMM_node* root = new IMM_node(NULL, player, b,0, p);
 	int iterations = 0;
 	for (iterations = 0; t.getTimeLeft() > 0; iterations++) {
 		IMM_node* tmp = IMM_select(root);

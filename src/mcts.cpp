@@ -86,7 +86,7 @@ double eval_test(Bitboard b) {
 }
 
 int mc_minmax_search(Bitboard b, Role player) {
-	double res = minmax_search(player, b, 6, eval_test);
+	double res = minmax_search(player, b, 6, 4, eval_test);
 	return res>0?1:(res==0?-1:0);
 }
 

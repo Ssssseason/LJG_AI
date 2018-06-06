@@ -2,7 +2,7 @@ CC = g++
 CPP_FLAGS = -I include -I Alpha-Reversi -std=c++11 
 LIB_FLAGS = -L/usr/local/lib -lcurl 
 VPATH = src include Alpha-Reversi Alpha-Reversi/core
-OBJS = main.o mcts.o minmax.o mc_minmax.o battlemain.o uct.o reversi.o newmcts.o
+OBJS = main.o mcts.o minmax.o mc_minmax.o battlemain.o uct.o reversi.o newmcts.o iteration_minmax.o
 
 .PHONY: all
 all: $(OBJS)

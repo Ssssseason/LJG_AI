@@ -101,7 +101,7 @@ int MC_random_search(Bitboard b, Role player) {
 }
 
 
-action MC_mct(Bitboard b, Role player, int depth, Timer t) {
+action MC_mct(Bitboard b, Role player, int depth, int p, Timer t) {
 	MC_node* root = new MC_node(NULL, change_player(player), b,0);
 	if (root->candidate_actions.size() == 0) {
 		delete root;
@@ -139,7 +139,7 @@ action MC_mct(Bitboard b, Role player, int depth, Timer t) {
 			wins = val > 0? 1: (val < 0? -1:0);
 		}
 		else if(depth > 0)
-			wins = minmax_search(change_player(c->player), c->b, depth, evaluate_combine);
+			wins = minmax_search(change_player(c->player), c->b, depth, p, evaluate_combine);
 		while (c != root) {
 			if (c->player == BLACK&&wins==1) {
 				c->wins++;

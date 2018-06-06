@@ -37,16 +37,17 @@ action human(Role player, Bitboard board) {
 
 
 action p1_engine(Role player, Bitboard b, Timer t) {
-	//return MC_mct(b, player, 0, t);
-	return minmax(player, b, 6, evaluate_combine);
+	return MC_mct(b, player, 3, 4, t);
+	//return IMM_imm(b, player, 3, false, t);
+	//return minmax(player, b, 6, evaluate_combine);
 }
 
 action p2_engine(Role player, Bitboard b, Timer t) {
 	// 0: randowm_search; -1: heuristic evaluation;
 	// i (i > 0): the depth of minmax
-	//return MC_mct(b, player, 3, t);
-	return IMM_imm(b, player, 3, t);
-	//return mc_minmax(player, b, 8, evaluate_combine,1000,t);
+	//return MC_mct(b, player, -1, t);
+	return IMM_imm(b, player, 3, 2, t);
+	//return mc_minmax(player, b, 6, evaluate_combine, t);
 	//return minmax(player, b, 6, evaluate_combine);
 }
 
@@ -97,7 +98,7 @@ int main() {
 	clock_t bstart, bend, wstart, wend;
 	clock_t p1time, p2time;
 	int seconds = 10;
-	int num = 1;
+	int num = 3;
 	while (num--) {
 		p1time = 0;
 		p2time = 0;
@@ -106,11 +107,15 @@ int main() {
 		//b.printBoard();
 		Role tplayer = BLACK;
 		Role p1 = BLACK;
-		//char* p1_name = "mcts_0";
-		char* p1_name = "minmax_6_combine";
+		char* p1_name = "mcts_3";
+		//char* p1_name = "minmax_6_combine";
+		//char* p1_name = "imm_3";
 		Role p2 = WHITE;
-		// char* p2_name = "mcts_10000";
-		char* p2_name = "human";
+		//char* p2_name = "minmax_6_combine";
+		//char* p2_name = "mcts_-1";
+		char* p2_name = "mc_imm_3";
+		//char* p2_name = "mc_minmax";
+		//char* p2_name = "human";
 		printf("BLACK: %s\t WHITE: %s\t\n", p1 == BLACK ? p1_name : p2_name, p1 == WHITE ? p1_name : p2_name);
 		int idx;
 		uint64_t act;
@@ -157,7 +162,7 @@ int main() {
 	getchar();
 	*/
 
-	num = 1;
+	num = 3;
 	while (num--) {
 		p1time = 0;
 		p2time = 0;
@@ -166,10 +171,16 @@ int main() {
 		b.printBoard();
 		Role tplayer = BLACK;
 		Role p2 = BLACK;
-		char* p2_name = "human";
+		//char* p2_name = "human";
+		//char* p2_name = "mc_minmax";
+		//char* p2_name = "minmax_6_combine";
+		//char* p2_name = "imm_3";
+		char* p2_name = "mc_imm_3";
+		//char* p2_name = "mcts_-1";
 		Role p1 = WHITE;
-		//char* p1_name = "mcts_0";
-		 char* p1_name = "minmax_6_combine";
+		char* p1_name = "mcts_3";
+		//char* p1_name = "imm_3";
+		//char* p1_name = "minmax_6_combine";
 		printf("BLACK: %s\t WHITE: %s\t\n", p1 == BLACK ? p1_name : p2_name, p1 == WHITE ? p1_name : p2_name);
 		int idx;
 		uint64_t act;
