@@ -27,25 +27,19 @@ ReversiEnv env;
 Position pos;
 JPlayer computer1;
 
-unsigned char Bitboard::cntOfByte[256] = {0};
-char Bitboard::roxanneWeights[64] = { 0 };
-unsigned char Bitboard::indices[64] = { 0 };
+// unsigned char Bitboard::cntOfByte[256] = {0};
+// char Bitboard::roxanneWeights[64] = { 0 };
+// unsigned char Bitboard::indices[64] = { 0 };
 using namespace std;
 
-string id="";
-string player="";
-string qipan="";
+//string id="";
+//string player="";
+//string qipan="";
 void battle();
 
-double evaluate_combine(Bitboard b) {
-    return Bitboard::evaluateCombine(b);
-}
+double evaluate_combine(Bitboard b); 
 
-action human(Role player, Bitboard board) {
-    int x, y;
-    scanf("%d%d", &x, &y);
-    return encode_action(x - 1, y - 1);
-}
+action human(Role player, Bitboard board) ;
 
 action oldYearCal(){
     int action1 = computer1.action(env, 1);
@@ -67,27 +61,12 @@ void oldYearMov(action temp){
     env.step(action1);
     pos.applyMove(action1);
 }
-action p1_engine(Role player, Bitboard b, Timer t) {
-    //return MC_mct(b, player, 0, t);
-    return minmax(player, b, 6, evaluate_combine);
 
-    
-}
+action p1_engine(Role player, Bitboard b, Timer t);
 
-action p2_engine(Role player, Bitboard b, Timer t) {
-    // 0: randowm_search; -1: heuristic evaluation;
-    // i (i > 0): the depth of minmax
-    return MC_mct(b, player, 3, t);
-    //return IMM_imm(b, player, 3, t);
-    //return mc_minmax(player, b, 8, evaluate_combine,1000,t);
-    //return minmax(player, b, 6, evaluate_combine);
+action p2_engine(Role player, Bitboard b, Timer t); 
 
-    
-}
-
-action run(machine f,Role player, Bitboard board, Timer t){
-    return f(player, board, t);
-}
+action run(machine f,Role player, Bitboard board, Timer t);
 
 /*int main(int argc, char **agrv)
 {
@@ -158,52 +137,17 @@ action run(machine f,Role player, Bitboard board, Timer t){
 	return 0;
 }*/
 
-
-
-int pkmain() {
+void pkmain() {
     cout << "start" <<endl;
     
     srand(time(NULL));//for mcts
     
     Bitboard::init();
-    //Bitboard b(0x810000000, 0x1008000000);
-    //b.printBoard();
-    
-    
-    
-    ////网络初始化
-    ////请求房间号session_id 这个老师还没给 假装是2
-    //
-    //id="2";
-    //string url="";
-    //string turn="";
-    ////1 返回整个棋盘
-    //url="http://47.89.179.202:5000/board_string/"+id;
-    //qipan=tcurl(url);
-    //cout << "棋盘"<< endl;
-    //cout << qipan << endl;
-    ////2 返回W or B
-    //url="http://47.89.179.202:5000/turn/"+id;
-    //turn=tcurl(url);
-    //cout << "turn"<< endl;
-    //cout << turn << endl;
-    ////3 返回自己白棋还是黑棋
-    //url="http://47.89.179.202:5000/create_session/"+id;
-    //player=tcurl(url);
-    //cout << "己方"<< endl;
-    //cout << player << endl;
-    ////4 下棋
-    //char x='3';
-    //char y='5';
-    //tcurl(x,y);//xy均为char
-    //Bitboard b(0x810000000, 0x1008000000);
-    //changeData("0.0.0.0.0.0.0.0;0.0.0.0.0.0.0.0;0.0.0.0.0.0.0.0;0.0.0.W.B.0.0.0;0.0.0.B.W.0. 0.0;0.0.0.0.0.0.0.0;0.0.0.0.0.0.0.0;0.0.0.0.0.0.0.0",b);
-    
-    
+ 
     clock_t bstart, bend, wstart, wend;
     clock_t p1time, p2time;
-    int seconds = 2;//oldyear的时间
-    int num = 1;
+    int seconds = 5;//oldyear的时间
+    int num = 2;
     while (num--) {
         p1time = 0;
         p2time = 0;
@@ -213,7 +157,8 @@ int pkmain() {
         Role tplayer = BLACK;
         Role p1 = BLACK;
         //char* p1_name = "mcts_0";
-        char* p1_name = "minmax_6_combine";
+        //char* p1_name = "minmax_6_combine";
+		char* p1_name = "imm3";
         Role p2 = WHITE;
         // char* p2_name = "mcts_10000";
         char* p2_name = "human";
@@ -268,7 +213,7 @@ int pkmain() {
      getchar();
      */
     
-    num = 1;
+    num = 2;
     while (num--) {
         p1time = 0;
         p2time = 0;
@@ -327,8 +272,5 @@ int pkmain() {
         printf("BLACK: %ld\t WHITE: %ld\t\n", p1 == BLACK? p1time: p2time, p1 == WHITE? p1time: p2time);
     }
     
-    // battle();
-    system("pause");
-    return 0;
 }
 

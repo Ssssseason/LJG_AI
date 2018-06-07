@@ -4,6 +4,7 @@
 *.o
 *.out
 *.log
+.DS_Store
 x64
 Debug
 curl-7.60.0
