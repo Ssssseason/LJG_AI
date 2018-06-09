@@ -25,6 +25,7 @@ string id="";
 string player="";
 string qipan="";
 string turn="";
+string changecolor="";
 void battle();
 void pkmain();
 
@@ -113,22 +114,26 @@ int main() {
             printf("%lf\n", time);
             //cout << time << endl;
             //cout <<temp<<endl;
-            assert(temp);
-            pair<int,int> xy = decode_action(temp);
-            printf("%d %d\n", xy.first, xy.second);
-            //int i=0;
-            //while((temp>>i)!=1){
-            //    i++;
-            //}
-            //cout <<i/8<<' '<<i%8<<endl;
-            while(res!="SUCCESS" && res!="ERROR") {
-                //res=tcurl('0'+i/8,'0'+i%8) ;
-                res = tcurl(xy.first+'0', xy.second+'0');
-                cout <<res<<endl;
-                // if(res=="ERROR") errorCount++;
-                // if(errorCount>1) break;
+            //assert(temp);
+            if(temp == 0){
+            	changecolor=tcurl(SERVER_IPSERVER_IP+"change_color/"+id);
             }
-            b.takeAction(ply, temp);
+            else {pair<int,int> xy = decode_action(temp);
+	            printf("%d %d\n", xy.first, xy.second);
+	            //int i=0;
+	            //while((temp>>i)!=1){
+	            //    i++;
+	            //}
+	            //cout <<i/8<<' '<<i%8<<endl;
+	            while(res!="SUCCESS" && res!="ERROR") {
+	                //res=tcurl('0'+i/8,'0'+i%8) ;
+	                res = tcurl(xy.first+'0', xy.second+'0');
+	                cout <<res<<endl;
+	                // if(res=="ERROR") errorCount++;
+	                // if(errorCount>1) break;
+	            }
+	            b.takeAction(ply, temp);
+	        }
             b.printBoard();
             if(b.hasEnded()){
                 printf("Use of Time: %lf\n", timeSum);
