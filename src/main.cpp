@@ -40,8 +40,8 @@ action human(Role player, Bitboard board) {
 
 
 action p1_engine(Role player, Bitboard b, Timer t) {
-	return MC_mct(b, player, 3, 4, t);
-	//return IMM_imm(b, player, 4, 0, t);
+	//return MC_mct(b, player, 3, 4, t);
+	return IMM_imm(b, player, 4, 0, t);
 	//return IMM_imm(b, player, 3, false, t);
 	//return minmax(player, b, 6, evaluate_combine);
 }
@@ -70,7 +70,7 @@ int main() {
 	
 	//b.printBoard();
     string SERVER_IPSERVER_IP="http://47.89.179.202:5000/";
-    id="37";
+    id="34";
     string res="";
     double timeSum=0;
     
@@ -123,8 +123,6 @@ int main() {
             cout <<i/8<<' '<<i%8<<endl;
         }
         
-        changeData(qipan,&b);
-        b.printBoard();
     }
     cout <<"Use of Time: "<<timeSum<<endl;
 
