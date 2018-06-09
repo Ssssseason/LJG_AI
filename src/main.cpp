@@ -82,6 +82,12 @@ int main() {
     while(1){
         qipan="";
         turn="";
+        while(turn=="\0"||turn!=player){
+            turn=tcurl(SERVER_IPSERVER_IP+"turn/"+id);
+            //cout <<SERVER_IPSERVER_IP+"turn/"+id<<endl;
+            cout << turn <<endl;
+            
+        }
         while(qipan=="\0"){
             qipan=tcurl(SERVER_IPSERVER_IP+"board_string/"+id);
             //cout <<SERVER_IPSERVER_IP+"board_string/"+id<<endl;
@@ -89,13 +95,6 @@ int main() {
         }
         changeData(qipan,&b);
         b.printBoard();
-        while(turn=="\0"||turn!=player){
-            turn=tcurl(SERVER_IPSERVER_IP+"turn/"+id);
-            //cout <<SERVER_IPSERVER_IP+"turn/"+id<<endl;
-            cout << turn <<endl;
-            
-        }
-        //tcurl(x,y);
         if(turn==player){
             action temp=run(p1_engine, ply, b, t);
             //if (temp==0) break;
