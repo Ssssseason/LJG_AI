@@ -72,8 +72,8 @@ int main() {
     //Timer t=3;
     
     //b.printBoard();
-    string SERVER_IPSERVER_IP="http://47.89.179.202:5000/";
-    id="11";
+    string SERVER_IPSERVER_IP="http://10.180.58.5:5000/";
+    id="2";
     string res="";
     double timeSum=0;
     double time = 0;
@@ -81,6 +81,7 @@ int main() {
     Role ply;
     while(player==""){
         player=tcurl(SERVER_IPSERVER_IP+"create_session/"+id);
+        //sleep(2);
         cout << player << endl;
     }
     if (player=="B") ply=BLACK;
@@ -118,7 +119,8 @@ int main() {
             if(temp == 0){
             	changecolor=tcurl(SERVER_IPSERVER_IP+"change_color/"+id);
             }
-            else {pair<int,int> xy = decode_action(temp);
+            else {
+                pair<int,int> xy = decode_action(temp);
 	            printf("%d %d\n", xy.first, xy.second);
 	            //int i=0;
 	            //while((temp>>i)!=1){

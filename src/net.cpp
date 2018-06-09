@@ -40,7 +40,7 @@ string tcurl(char x, char y){
     CURL *curl;
     curl = curl_easy_init();
     string res="";
-    string SERVER_IP="http://47.89.179.202:5000/";
+    string SERVER_IP="http://10.180.58.5:5000/";
     string url=SERVER_IP+"move/"+id+"/"+x+"/"+y+"/"+player;
     //url = "http://47.89.179.202:5000/board_string/2";
     //cout << version;
