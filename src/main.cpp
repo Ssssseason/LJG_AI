@@ -121,12 +121,12 @@ int main() {
             //    i++;
             //}
             //cout <<i/8<<' '<<i%8<<endl;
-            while(res!="SUCCESS") {
+            while(res!="SUCCESS"&&res!="ERROR") {
                 //res=tcurl('0'+i/8,'0'+i%8) ;
-                res = tcurl(xy.first, xy.second);
+                res = tcurl('0'+xy.first, '0'+xy.second);
                 cout <<res<<endl;
-                if(res=="ERROR") errorCount++;
-                if(errorCount>2) break;
+                //if(res=="ERROR") errorCount++;
+                //if(errorCount>1) break;
             }
             b.takeAction(ply, temp);
             b.printBoard();
