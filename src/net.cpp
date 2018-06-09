@@ -44,9 +44,10 @@ string tcurl(char x, char y){
     string url=SERVER_IP+"move/"+id+"/"+x+"/"+y+"/"+player;
     //url = "http://47.89.179.202:5000/board_string/2";
     //cout << version;
+    //cout << url << endl;
     
     //抓取http数据
-    curl_easy_setopt(curl, CURLOPT_POST, 1);
+    //curl_easy_setopt(curl, CURLOPT_POST, 1);
     curl_easy_setopt(curl,CURLOPT_URL,url.c_str());
     //curl_easy_setopt(curl, CURLOPT_POSTFIELDS, postParams.c_str()); // params
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&res);

@@ -65,7 +65,7 @@ int main() {
 
 	Bitboard::init();
     Bitboard b(0x810000000, 0x1008000000);
-    Timer t=3;
+    //Timer t=3;
 	
 	//b.printBoard();
     string SERVER_IPSERVER_IP="http://47.89.179.202:5000/";
@@ -80,6 +80,7 @@ int main() {
     if (player=="B") ply=BLACK;
     else ply=WHITE;
     while(1){
+        
         qipan="";
         turn="";
         while(turn=="\0"||turn!=player){
@@ -96,14 +97,17 @@ int main() {
         changeData(qipan,&b);
         b.printBoard();
         if(turn==player){
+            Timer t=3;
             action temp=run(p1_engine, ply, b, t);
+            cout <<temp<<endl;
             //if (temp==0) break;
             int i=0;
             while((temp>>i)!=1){
                 i++;
             }
-            while(res!="SUCESS") res=tcurl(i/8+1,i%8+1) ;
-            cout <<i/8+1<<' '<<i%8+1<<endl;
+            cout <<i/8<<' '<<i%8<<endl;
+            while(res!="SUCESS") {res=tcurl('0'+i/8,'0'+i%8) ; cout <<res<<endl;}
+            cout <<i/8<<' '<<i%8<<endl;
         }
     }
 
