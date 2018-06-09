@@ -10,7 +10,7 @@
 #include "mc_minmax.h"
 #include <climits>
 
-// #include "net.hpp"
+#include "net.hpp"
 #include "iteration_minmax.h"
 #include <iostream>
 
@@ -23,6 +23,7 @@ using namespace std;
 string id="";
 string player="";
 string qipan="";
+string turn="";
 void battle();
 void pkmain();
 
@@ -38,8 +39,8 @@ action human(Role player, Bitboard board) {
 
 
 action p1_engine(Role player, Bitboard b, Timer t) {
-	//return MC_mct(b, player, 3, 4, t);
-	return IMM_imm(b, player, 4, 0, t);
+	return MC_mct(b, player, 3, 4, t);
+	//return IMM_imm(b, player, 4, 0, t);
 	//return IMM_imm(b, player, 3, false, t);
 	//return minmax(player, b, 6, evaluate_combine);
 }
@@ -63,10 +64,48 @@ int main() {
 	srand(time(NULL));//for mcts
 
 	Bitboard::init();
-	//Bitboard b(0x810000000, 0x1008000000);
+    Bitboard b(0x810000000, 0x1008000000);
+    Timer t=30;
+	
 	//b.printBoard();
-
-
+    string SERVER_IPSERVER_IP="http://47.89.179.202:5000/";
+    id="9";
+    
+    Role ply;
+    while(player=="\0"){
+        player=tcurl(SERVER_IPSERVER_IP+"create_session/"+id);
+        cout << player << endl;
+    }
+    if (player=="B") ply=BLACK;
+    else ply=WHITE;
+    cout << ply;
+    while(1){
+        qipan="";
+        turn="";
+        while(qipan=="\0"){
+            qipan=tcurl(SERVER_IPSERVER_IP+"board_string/"+id);
+            //cout <<SERVER_IPSERVER_IP+"board_string/"+id<<endl;
+            cout << qipan<<endl;
+        }
+        b.printBoard();
+        while(turn=="\0"||turn!=player){
+            turn=tcurl(SERVER_IPSERVER_IP+"turn/"+id);
+            //cout <<SERVER_IPSERVER_IP+"turn/"+id<<endl;
+            cout << turn <<endl;
+            
+        }
+        changeData(qipan,&b);
+        //tcurl(x,y);
+        if(turn==player){
+            action temp=run(p1_engine, ply, b, t);
+            //if (temp==0) break;
+            int i=0;
+            while((temp>>i)!=1){
+                i++;
+            }
+            tcurl(i/8+1,i%8+1) ;
+        }
+    }
 
    ////网络初始化
    ////请求房间号session_id 这个老师还没给 假装是2
@@ -224,7 +263,7 @@ int main() {
 	 //}
 
 	// battle();
-	pkmain();
+	//pkmain();
 	system("pause");
 	return 0;
 }
