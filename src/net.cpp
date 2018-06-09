@@ -35,7 +35,7 @@ string tcurl(string url){
     //cout << res << endl;
     return res;
 }
-void tcurl(char x, char y){
+string tcurl(char x, char y){
     //char *version = curl_version();
     CURL *curl;
     curl = curl_easy_init();
@@ -62,7 +62,7 @@ void tcurl(char x, char y){
     curl_easy_cleanup(curl);
     //cout << version << endl;
     //cout << res << endl;
-    //return res;
+    return res;
 }
 //数据的获取
 size_t myWrite( void *ptr, size_t size, size_t nmemb, void *stream){

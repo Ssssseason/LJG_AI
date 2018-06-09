@@ -23,7 +23,7 @@ string tcurl(string url);
 
 //4下棋
 //ret = requests.post(SERVER_IP+"move/3/2/W")
-void tcurl(char x, char y);
+string tcurl(char x, char y);
 
 size_t myWrite( void *ptr, size_t size, size_t nmemb, void *stream);
 void changeData(string netData,Bitboard* bp);
