@@ -63,16 +63,16 @@ action run(machine f,Role player, Bitboard board, Timer t){
 
 int main() {
     cout << "start" <<endl;
-	
-	srand(time(NULL));//for mcts
-
-	Bitboard::init();
+    
+    srand(time(NULL));//for mcts
+    
+    Bitboard::init();
     Bitboard b(0x810000000, 0x1008000000);
     //Timer t=3;
-	
-	//b.printBoard();
+    
+    //b.printBoard();
     string SERVER_IPSERVER_IP="http://47.89.179.202:5000/";
-    id="34";
+    id="11";
     string res="";
     double timeSum=0;
     double time = 0;
@@ -89,14 +89,14 @@ int main() {
         qipan="";
         turn="";
         res="";
-        while(turn=="\0"||turn!=player){
+        while(turn=="" ||turn!=player){
             sleep(2);
             turn=tcurl(SERVER_IPSERVER_IP+"turn/"+id);
             //cout <<SERVER_IPSERVER_IP+"turn/"+id<<endl;
             cout << turn <<endl;
             
         }
-        while(qipan=="\0"){
+        while(qipan==""){
             qipan=tcurl(SERVER_IPSERVER_IP+"board_string/"+id);
             //cout <<SERVER_IPSERVER_IP+"board_string/"+id<<endl;
             cout << qipan<<endl;
@@ -105,6 +105,7 @@ int main() {
         b.printBoard();
         //if(b.hasEnded()) break;
         if(turn==player){
+            
             Timer t=3;
             action temp=run(p1_engine, ply, b, t);
             time = t.getTimePassed();
@@ -112,33 +113,31 @@ int main() {
             printf("%lf\n", time);
             //cout << time << endl;
             //cout <<temp<<endl;
-            //if (temp==0) break;
-            int i=0;
-            while((temp>>i)!=1){
-                i++;
-            }
-            cout <<i/8<<' '<<i%8<<endl;
+            assert(temp);
+            pair<int,int> xy = decode_action(temp);
+            printf("%d %d\n", xy.first, xy.second);
+            //int i=0;
+            //while((temp>>i)!=1){
+            //    i++;
+            //}
+            //cout <<i/8<<' '<<i%8<<endl;
             while(res!="SUCCESS") {
-                res=tcurl('0'+i/8,'0'+i%8) ;
+                //res=tcurl('0'+i/8,'0'+i%8) ;
+                res = tcurl(xy.first, xy.second);
                 cout <<res<<endl;
-                errorCount++;
-                if(errorCount>5) break;
+                if(res=="ERROR") errorCount++;
+                if(errorCount>2) break;
             }
             b.takeAction(ply, temp);
             b.printBoard();
             if(b.hasEnded()){
-            	printf("Use of Time: %lf\n", timeSum);
-            	//cout << "Use of Time: " << timeSum << endl;
-            	pair<int, int> nums = b.getPieces();
-            	printf("Black: %d\tWhite: %d\n", nums.first, nums.second);
-            	break;
+                printf("Use of Time: %lf\n", timeSum);
+                //cout << "Use of Time: " << timeSum << endl;
+                pair<int, int> nums = b.getPieces();
+                printf("Black: %d\tWhite: %d\n", nums.first, nums.second);
+                break;
             }
-            // cout <<i/8<<' '<<i%8<<endl;
         }
-
-        //changeData(qipan,&b);
-        // b.printBoard();
-
     }
     //cout <<"Use of Time: "<<timeSum<<endl;
 
