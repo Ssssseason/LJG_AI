@@ -84,6 +84,7 @@ int main() {
         
         qipan="";
         turn="";
+        res="";
         while(turn=="\0"||turn!=player){
             sleep(2);
             turn=tcurl(SERVER_IPSERVER_IP+"turn/"+id);
