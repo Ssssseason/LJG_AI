@@ -72,7 +72,7 @@ int main() {
 	
 	//b.printBoard();
     string SERVER_IPSERVER_IP="http://47.89.179.202:5000/";
-    id="34";
+    id="11";
     string res="";
     double timeSum=0;
     double time = 0;
