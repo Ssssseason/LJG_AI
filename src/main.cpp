@@ -13,6 +13,7 @@
 #include "net.hpp"
 #include "iteration_minmax.h"
 #include <iostream>
+#include <unistd.h>
 
 
 unsigned char Bitboard::cntOfByte[256] = {0};
@@ -69,7 +70,7 @@ int main() {
 	
 	//b.printBoard();
     string SERVER_IPSERVER_IP="http://47.89.179.202:5000/";
-    id="9";
+    id="31";
     string res="";
     
     Role ply;
@@ -84,6 +85,7 @@ int main() {
         qipan="";
         turn="";
         while(turn=="\0"||turn!=player){
+            sleep(2);
             turn=tcurl(SERVER_IPSERVER_IP+"turn/"+id);
             //cout <<SERVER_IPSERVER_IP+"turn/"+id<<endl;
             cout << turn <<endl;
