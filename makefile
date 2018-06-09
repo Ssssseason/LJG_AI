@@ -1,6 +1,6 @@
 CC = g++
-CPP_FLAGS = -I include -I Alpha-Reversi -std=c++11 
-LIB_FLAGS = -L/usr/local/lib -lcurl 
+CPP_FLAGS = -I include -I Alpha-Reversi -std=c++11 -O2
+LIB_FLAGS = -L/usr/local/lib -lcurl -O2
 VPATH = src include Alpha-Reversi Alpha-Reversi/core
 OBJS = main.o mcts.o minmax.o mc_minmax.o battlemain.o uct.o reversi.o newmcts.o iteration_minmax.o net.o
 

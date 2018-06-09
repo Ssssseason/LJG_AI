@@ -78,7 +78,7 @@ int main() {
     double time = 0;
     
     Role ply;
-    while(player=="\0"){
+    while(player==""){
         player=tcurl(SERVER_IPSERVER_IP+"create_session/"+id);
         cout << player << endl;
     }
@@ -121,12 +121,14 @@ int main() {
             //    i++;
             //}
             //cout <<i/8<<' '<<i%8<<endl;
-            while(res!="SUCCESS"&&res!="ERROR") {
+
+            while(res!="SUCCESS" && res!="ERROR") {
                 //res=tcurl('0'+i/8,'0'+i%8) ;
-                res = tcurl('0'+xy.first, '0'+xy.second);
+                res = tcurl(xy.first+'0', xy.second+'0');
                 cout <<res<<endl;
-                //if(res=="ERROR") errorCount++;
-                //if(errorCount>1) break;
+                // if(res=="ERROR") errorCount++;
+                // if(errorCount>1) break;
+
             }
             b.takeAction(ply, temp);
             b.printBoard();
