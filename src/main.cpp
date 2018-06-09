@@ -42,7 +42,7 @@ action human(Role player, Bitboard board) {
 action p1_engine(Role player, Bitboard b, Timer t) {
 	//return MC_mct(b, player, 3, 4, t);
 
-	return IMM_imm(b, player, 4, 0, t);
+	return IMM_imm(b, player, 3, 0, t);
 
 	//return IMM_imm(b, player, 3, false, t);
 	//return minmax(player, b, 6, evaluate_combine);
@@ -63,14 +63,14 @@ action run(machine f,Role player, Bitboard board, Timer t){
 
 int main() {
     cout << "start" <<endl;
-	
-	srand(time(NULL));//for mcts
-
-	Bitboard::init();
+    
+    srand(time(NULL));//for mcts
+    
+    Bitboard::init();
     Bitboard b(0x810000000, 0x1008000000);
     //Timer t=3;
-	
-	//b.printBoard();
+    
+    //b.printBoard();
     string SERVER_IPSERVER_IP="http://47.89.179.202:5000/";
     id="11";
     string res="";
@@ -131,11 +131,11 @@ int main() {
             b.takeAction(ply, temp);
             b.printBoard();
             if(b.hasEnded()){
-            	printf("Use of Time: %lf\n", timeSum);
-            	//cout << "Use of Time: " << timeSum << endl;
-            	pair<int, int> nums = b.getPieces();
-            	printf("Black: %d\tWhite: %d\n", nums.first, nums.second);
-            	break;
+                printf("Use of Time: %lf\n", timeSum);
+                //cout << "Use of Time: " << timeSum << endl;
+                pair<int, int> nums = b.getPieces();
+                printf("Black: %d\tWhite: %d\n", nums.first, nums.second);
+                break;
             }
         }
     }
