@@ -41,7 +41,9 @@ action human(Role player, Bitboard board) {
 
 action p1_engine(Role player, Bitboard b, Timer t) {
 	//return MC_mct(b, player, 3, 4, t);
+
 	return IMM_imm(b, player, 4, 0, t);
+
 	//return IMM_imm(b, player, 3, false, t);
 	//return minmax(player, b, 6, evaluate_combine);
 }
@@ -73,6 +75,7 @@ int main() {
     id="34";
     string res="";
     double timeSum=0;
+    double time = 0;
     
     Role ply;
     while(player=="\0"){
@@ -100,12 +103,16 @@ int main() {
         }
         changeData(qipan,&b);
         b.printBoard();
-        if(b.hasEnded()) break;
+        //if(b.hasEnded()) break;
         if(turn==player){
             
             Timer t=3;
             action temp=run(p1_engine, ply, b, t);
-            cout <<temp<<endl;
+            time = t.getTimePassed();
+            timeSum += time;
+            printf("%lf\n", time);
+            //cout << time << endl;
+            //cout <<temp<<endl;
             //if (temp==0) break;
             int i=0;
             while((temp>>i)!=1){
@@ -118,13 +125,23 @@ int main() {
                 errorCount++;
                 if(errorCount>5) break;
             }
-            cout << t.getTimePassed() << endl;
-            timeSum+=t.getTimePassed();
-            cout <<i/8<<' '<<i%8<<endl;
+            b.takeAction(ply, temp);
+            b.printBoard();
+            if(b.hasEnded()){
+            	printf("Use of Time: %lf\n", timeSum);
+            	//cout << "Use of Time: " << timeSum << endl;
+            	pair<int, int> nums = b.getPieces();
+            	printf("Black: %d\tWhite: %d\n", nums.first, nums.second);
+            	break;
+            }
+            // cout <<i/8<<' '<<i%8<<endl;
         }
-        
+
+        //changeData(qipan,&b);
+        // b.printBoard();
+
     }
-    cout <<"Use of Time: "<<timeSum<<endl;
+    //cout <<"Use of Time: "<<timeSum<<endl;
 
    ////网络初始化
    ////请求房间号session_id 这个老师还没给 假装是2
