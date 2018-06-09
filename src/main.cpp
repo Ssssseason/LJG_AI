@@ -70,7 +70,7 @@ int main() {
 	
 	//b.printBoard();
     string SERVER_IPSERVER_IP="http://47.89.179.202:5000/";
-    id="31";
+    id="37";
     string res="";
     
     Role ply;
@@ -81,9 +81,10 @@ int main() {
     if (player=="B") ply=BLACK;
     else ply=WHITE;
     while(1){
-        
+        int errorCount=0;
         qipan="";
         turn="";
+        res="";
         while(turn=="\0"||turn!=player){
             sleep(2);
             turn=tcurl(SERVER_IPSERVER_IP+"turn/"+id);
@@ -108,9 +109,22 @@ int main() {
                 i++;
             }
             cout <<i/8<<' '<<i%8<<endl;
-            while(res!="SUCCESS") {res=tcurl('0'+i/8,'0'+i%8) ; cout <<res<<endl;}
+            while(res!="SUCCESS") {
+                res=tcurl('0'+i/8,'0'+i%8) ;
+                cout <<res<<endl;
+                errorCount++;
+                if(errorCount>5) break;
+            }
             cout <<i/8<<' '<<i%8<<endl;
         }
+        sleep(5);
+        while(qipan=="\0"){
+            qipan=tcurl(SERVER_IPSERVER_IP+"board_string/"+id);
+            //cout <<SERVER_IPSERVER_IP+"board_string/"+id<<endl;
+            cout << qipan<<endl;
+        }
+        changeData(qipan,&b);
+        b.printBoard();
     }
 
    ////网络初始化
