@@ -72,6 +72,7 @@ int main() {
     string SERVER_IPSERVER_IP="http://47.89.179.202:5000/";
     id="37";
     string res="";
+    double timeSum=0;
     
     Role ply;
     while(player=="\0"){
@@ -99,7 +100,9 @@ int main() {
         }
         changeData(qipan,&b);
         b.printBoard();
+        if(b.hasEnded()) break;
         if(turn==player){
+            
             Timer t=3;
             action temp=run(p1_engine, ply, b, t);
             cout <<temp<<endl;
@@ -115,17 +118,15 @@ int main() {
                 errorCount++;
                 if(errorCount>5) break;
             }
+            cout << t.getTimePassed() << endl;
+            timeSum+=t.getTimePassed();
             cout <<i/8<<' '<<i%8<<endl;
         }
-        sleep(5);
-        while(qipan=="\0"){
-            qipan=tcurl(SERVER_IPSERVER_IP+"board_string/"+id);
-            //cout <<SERVER_IPSERVER_IP+"board_string/"+id<<endl;
-            cout << qipan<<endl;
-        }
+        
         changeData(qipan,&b);
         b.printBoard();
     }
+    cout <<"Use of Time: "<<timeSum<<endl;
 
    ////网络初始化
    ////请求房间号session_id 这个老师还没给 假装是2
