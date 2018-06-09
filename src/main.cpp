@@ -106,7 +106,7 @@ int main() {
                 i++;
             }
             cout <<i/8<<' '<<i%8<<endl;
-            while(res!="SUCESS") {res=tcurl('0'+i/8,'0'+i%8) ; cout <<res<<endl;}
+            while(res!="SUCCESS") {res=tcurl('0'+i/8,'0'+i%8) ; cout <<res<<endl;}
             cout <<i/8<<' '<<i%8<<endl;
         }
     }
