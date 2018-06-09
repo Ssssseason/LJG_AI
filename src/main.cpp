@@ -43,10 +43,10 @@ action human(Role player, Bitboard board) {
 action p1_engine(Role player, Bitboard b, Timer t) {
 	//return MC_mct(b, player, 3, 4, t);
 
-	//return IMM_imm(b, player, 3, 0, t);
+	return IMM_imm(b, player, 3, 0, t);
 
 	//return IMM_imm(b, player, 3, false, t);
-	return minmax(player, b, 6, evaluate_combine);
+	//return minmax(player, b, 6, evaluate_combine);
 }
 
 action p2_engine(Role player, Bitboard b, Timer t) {
@@ -108,7 +108,7 @@ int main() {
         //if(b.hasEnded()) break;
         if(turn==player){
             
-            Timer t=3;
+            Timer t=10;
             action temp=run(p1_engine, ply, b, t);
             time = t.getTimePassed();
             timeSum += time;
