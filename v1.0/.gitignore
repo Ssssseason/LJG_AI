@@ -1,0 +1,17 @@
+.vscode
+.vs
+*.d
+*.o
+*.out
+*.log
+.DS_Store
+x64
+Debug
+curl-7.60.0
+curl-7.60.0.tar.gz
+reversi.sln
+reversi.vcxproj
+reversi.vcxproj.filters
+reversi.vcxproj.user
+src/main.cpp
+Release
