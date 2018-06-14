@@ -229,10 +229,6 @@ public:
 		+ getPopCnt((shiftUpRight(white) & emptyCorner))
 		+ getPopCnt((shiftDownLeft(white) & emptyCorner))
 		+ getPopCnt((shiftDownRight(white) & emptyCorner));
-		// printPawn(black);
-		// printPawn(white);
-		// printPawn(emptyCorner);
-		// printf("%d %d\n",b,w );
 		return make_pair(b, w);
 	}
 
@@ -266,23 +262,6 @@ public:
 		return roxanneWeights[scanForward(action)];
 	}
 
-
-	// double evaluate()const {
-	// 	// will be removed
-	// 	pair<int, int> pMob = getMobility();
-	// 	pair<int, int> pPMob = getProtMobility();
-	// 	pair<int, int> pCor = getCorner();
-	// 	pair<int, int> pRox = getRoxaneDotProduct();
-	// 	pair<int, int> pPie = getPieces();
-	// 	int mob = pMob.first - pMob.second;
-	// 	int pmob = pPMob.first - pPMob.second;
-	// 	int cor = pCor.first - pCor.second;
-	// 	// int rox = pRox.first - pRox.second;
-	// 	int pie = pPie.first - pPie.second;
-	// 	return mob + pmob + cor * 80 + pie * 80;
-	// 	// return m + p + c * 80 + r * 80;
-	// }
-
 	static double evaluateCombine(const Bitboard &b) {
 
 		pair<int, int> pm = b.getMobility();
@@ -302,17 +281,9 @@ public:
 		int s = ps.first - ps.second;
 		double pi = ppi.first > ppi.second? 1.0*ppi.first/(ppi.first + ppi.second):
 					(ppi.first<ppi.second? -1.0*ppi.second/(ppi.first+ppi.second):0);
-		/*printf("Mobility: %d\n", m);
-		printf("ProbMobility: %d\n", p);
-		printf("Corner: %d\n", c);*/
-		//return m + p + c * 80 + r * 10 - 40 * s;
-		// return 4 * c - s;
-		//return (78922*m+ 74396*p+20025*c+10 * r-4775*s + 1000*pi);
+
 		return 789.22*m+ 743.96*p+200.25*c+0.1 * r-47.75*s + 10*pi;
-		//int m = b.getMobility();
-		//int p = b.getProtMobility();
-		//int c = b.getCorner();
-		//return m + p + c * 80;
+
 	}
 
 	void printBoard() const
@@ -369,26 +340,7 @@ public:
 		{
 			cntOfByte[i] = cntOfByte[i / 2] + (i & 1);
 		}
-		// unsigned char weights[64] = {
-		// 	1,5,3,3,3,3,5,1,
-		// 	5,5,4,4,4,4,5,5,
-		// 	3,4,2,2,2,2,4,3,
-		// 	3,4,2,0,0,2,4,3,
-		// 	3,4,2,0,0,2,4,3,
-		// 	3,4,2,2,2,2,4,3,
-		// 	5,5,4,4,4,4,5,5,
-		// 	1,5,3,3,3,3,5,1
-		// };
-		// unsigned char weights[64] = {
-		// 	5,1,3,3,3,3,1,5,
-		// 	1,1,2,2,2,2,1,1,
-		// 	3,2,4,4,4,4,2,3,
-		// 	3,2,4,0,0,4,2,3,
-		// 	3,2,4,0,0,4,2,3,
-		// 	3,2,4,4,4,4,2,3,
-		// 	1,1,2,2,2,2,1,1,
-		// 	5,1,3,3,3,3,1,5
-		// };
+
 		char weights[64] = {
 			20, -3, 11,  8,  8, 11, -3, 20,
 		    -3, -7, -4,  1,  1, -4, -7, -3,
@@ -398,15 +350,8 @@ public:
 		    11, -4,  2,  2,  2,  2, -4, 11,
 		    -3, -7, -4,  1,  1, -4, -7, -3,
 		    20, -3, 11,  8,  8, 11, -3, 20,
-			//  4,-4, 3, 1, 1, 3,-4, 4,
-			// -4,-5,-3,-2,-2,-3,-5,-4,
-			//  3,-3, 2, 0, 0, 2,-3, 3,
-			//  1,-2, 0,-1,-1, 0,-2,-1,
-			//  1,-2, 0,-1,-1, 0,-2,-1,
-			//  3,-3, 2, 0, 0, 2,-3, 3,
-			// -4,-5,-3,-2,-2,-3,-5,-4,
-			//  4,-4, 3, 1, 1, 3,-4, 4
 		};
+		
 		unsigned char in[64] = {
 			0,  1, 48,  2, 57, 49, 28,  3,
 			61, 58, 50, 42, 38, 29, 17,  4,
