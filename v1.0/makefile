@@ -2,7 +2,7 @@ CC = g++
 CPP_FLAGS = -I include -std=c++11 -O2
 LIB_FLAGS = -L/usr/local/lib -lcurl -O2
 VPATH = src include
-OBJS = main.o mcts.o minmax.o mc_minmax.o newmcts.o iteration_minmax.o net.o
+OBJS = main.o minmax.o mc_minmax.o mcts.o iteration_minmax.o net.o
 
 .PHONY: all
 all: $(OBJS)
