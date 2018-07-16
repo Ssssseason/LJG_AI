@@ -1,4 +1,31 @@
 # Reversi_AI
+
+C++实现的AI五子棋，主要包括：
+- 使用curl实现的网络请求处理
+- 标准蒙特卡洛树算法
+- Alpha-Beta pruning Minimax
+- Iterative Minimax （每次三层迭代，充分利用时间）
+
+**性能**
+MCTS < alpha-beta pruning minimax < iterative minimax
+
+## 使用方法
+p1_engine 和 p2_engine用于包装ai引擎，里面需要做类型和格式的调整用以适应不同的ai引擎的写法
+
+在main里面修改p1 p2的Role，改变先后手
+
+- minmax引擎传入估值函数(类型double (*)(Bitboard b))和搜索深度
+- mcts引擎传入搜索深度和时间控制类实例
+	- 搜索深度：大于0则使用minmax_search（调试中）；否则使用random_search
+	- 时间控制：限制迭代次数
+- human手动测试用
+
+**Alpha-Reversi**中为去年代码，eigen3为代码中使用的矩阵库，core中为核心代码，battlemain.cpp用于测试我们算法性能。
+
+**oldyear**中为Botzone排行榜中第二名代码，测试用。
+
+**v1.0**为用于提交的经过整理的代码
+
 ***
 
 ## 文件清单
@@ -103,24 +130,3 @@
 
   返回以秒为单位的已经流逝的时间
 
-## 使用方法
-
-p1_engine 和 p2_engine用于包装ai引擎，里面需要做类型和格式的调整用以适应不同的ai引擎的写法
-
-在main里面修改p1 p2的Role，改变先后手
-
-- minmax引擎传入估值函数(类型`double (*)(Bitboard b)`)和搜索深度
-- mcts引擎传入搜索深度和时间控制类实例
-  - 搜索深度：大于0则使用minmax_search（调试中）；否则使用random_search
-  - 时间控制：限制迭代次数
-- human手动测试用
-
-**Alpha-Reversi**中为去年代码，eigen3为代码中使用的矩阵库，core中为核心代码，battlemain.cpp用于测试我们算法性能。
-
-## TODO list
-
-- [x] mcst with random search
-- [x] minmax
-- [ ] mcst with mc_minmax
-- [ ] http request handle
-- [ ] ....
