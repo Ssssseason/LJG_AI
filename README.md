@@ -1,13 +1,16 @@
 # Reversi_AI
 
-C++实现的AI五子棋，主要包括：
-- 使用curl实现的网络请求处理
+C++实现的AI翻转棋，主要包括：
+- 使用curl实现的网络请求处理（通过网络对战）
 - 标准蒙特卡洛树算法
 - Alpha-Beta pruning Minimax
 - Iterative Minimax （每次三层迭代，充分利用时间）
 
 **性能**
 MCTS < alpha-beta pruning minimax < iterative minimax
+
+## 构建
+Linux下```make```构建，```make clean```清除
 
 ## 使用方法
 p1_engine 和 p2_engine用于包装ai引擎，里面需要做类型和格式的调整用以适应不同的ai引擎的写法
